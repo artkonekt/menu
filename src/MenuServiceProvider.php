@@ -31,11 +31,11 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/settings.php', 'laravel-menu.settings');
-        $this->mergeConfigFrom(__DIR__ . '/../config/views.php', 'laravel-menu.views');
+        $this->mergeConfigFrom(__DIR__ . '/../config/settings.php', 'menu.settings');
+        $this->mergeConfigFrom(__DIR__ . '/../config/views.php', 'menu.views');
 
         $this->app->singleton('menu', function ($app) {
-            return new Menu();
+            return new Repository();
         });
 
         $this->registerBladeExtensions();
@@ -48,15 +48,12 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Extending Blade engine
-        require_once('blade/lm-attrs.php');
-
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'menu');
 
         $this->publishes([
-            __DIR__ . '/../resources/views'           => base_path('resources/views/vendor/laravel-menu'),
-            __DIR__ . '/../config/settings.php' => config_path('laravel-menu/settings.php'),
-            __DIR__ . '/../config/views.php'    => config_path('laravel-menu/views.php'),
+            __DIR__ . '/../resources/views'     => base_path('resources/views/vendor/menu'),
+            __DIR__ . '/../config/settings.php' => config_path('menu_settings.php'),
+            __DIR__ . '/../config/views.php'    => config_path('menu_views.php'),
         ]);
     }
 

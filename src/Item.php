@@ -82,9 +82,9 @@ class Item
     /**
      * Class constructor
      *
-     * @param  \Konekt\Menu\Menu $builder
+     * @param  \Konekt\Menu\Repository $builder
      * @param                    $id
-     * @param  string            $title
+     * @param  string                  $title
      * @param                    $options
      */
     public function __construct($builder, $id, $title, $options)
