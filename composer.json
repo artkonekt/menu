@@ -1,0 +1,52 @@
+{
+    "name": "konekt/menu",
+    "description": "Menus in Laravel 5",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "keywords": [
+        "laravel"
+    ],
+    "support": {
+        "issues": "https://github.com/artkonekt/menu"
+    },
+    "authors": [
+        {
+            "name": "Attila Fulop",
+            "homepage": "https://github.com/fulopattila122"
+        },
+        {
+            "name": "Lavary",
+            "email": "mrl.8081@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "illuminate/support": "~5.3",
+        "illuminate/view": "~5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Konekt\\Menu\\": "src/"
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.4.2",
+        "phpunit/phpunit" : "^6.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Konekt\\Concord\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Konekt\\Menu\\MenuServiceProvider"
+            ]
+        }
+    }
+}
