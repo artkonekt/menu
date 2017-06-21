@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the Builder class.
+ * Contains the Menu class.
  *
  * @author      Lavary
  * @author      Attila Fulop
@@ -13,13 +13,14 @@ namespace Konekt\Menu;
 
 use URL;
 
-class Builder
+/**
+ * Menu represents a single menu, that has several items, groups
+ */
+class Menu
 {
 
     /**
-     * The items container
-     *
-     * @var array
+     * @var Collection
      */
     protected $items;
 
@@ -42,14 +43,14 @@ class Builder
      *
      * @var array
      */
-    protected $groupStack = array();
+    protected $groupStack = [];
 
     /**
      * The reserved attributes.
      *
      * @var array
      */
-    protected $reserved = array('route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw');
+    protected $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw'];
 
     /**
      * Initializing the menu manager
@@ -60,10 +61,7 @@ class Builder
     public function __construct($name, $conf)
     {
         $this->name = $name;
-
-        // creating a laravel collection ofr storing enu items
         $this->items = new Collection();
-
         $this->conf = $conf;
 
     }
@@ -74,7 +72,7 @@ class Builder
      * @param string $title
      * @param string $options
      *
-     * @return Konekt\Menu\Item $item
+     * @return \Konekt\Menu\Item $item
      * @internal param array|string $acion
      *
      */
@@ -453,7 +451,7 @@ class Builder
      *
      * @param  callable $callback
      *
-     * @return \Konekt\Menu\Builder
+     * @return \Konekt\Menu\Menu
      */
     public function filter($callback)
     {
@@ -470,7 +468,7 @@ class Builder
      *
      * @param string|callable $sort_type
      *
-     * @return \Konekt\Menu\Builder
+     * @return \Konekt\Menu\Menu
      */
     public function sortBy($sort_by, $sort_type = 'asc')
     {
@@ -732,7 +730,6 @@ class Builder
     public function __get($prop)
     {
         if (property_exists($this, $prop)) {
-
             return $this->$prop;
         }
 

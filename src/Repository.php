@@ -13,6 +13,9 @@ namespace Konekt\Menu;
 
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;
 
+/**
+ * Menu Repository class contains several menu instances
+ */
 class Repository
 {
     /**
@@ -47,7 +50,7 @@ class Repository
             throw new MenuAlreadyExistsException("Can not create menu named `$name` because it already exists");
         }
 
-        $this->menus->put($name, new Builder($name, $this->loadConf($name)));
+        $this->menus->put($name, new Menu($name, $this->loadConf($name)));
 
         if (is_callable($callback)) {
             // Registering the items
@@ -81,7 +84,7 @@ class Repository
      *
      * @param  string $key
      *
-     * @return Builder|null
+     * @return Menu|null
      */
     public function get($key)
     {

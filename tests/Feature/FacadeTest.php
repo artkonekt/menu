@@ -13,9 +13,8 @@
 namespace Konekt\Menu\Tests\Feature;
 
 
-use Konekt\Menu\Builder;
 use Konekt\Menu\Tests\TestCase;
-use Menu;
+use Menu; // The Facade
 
 class FacadeTest extends TestCase
 {
@@ -25,7 +24,7 @@ class FacadeTest extends TestCase
             $menu->add('Home');
         });
 
-        $this->assertInstanceOf(Builder::class, $navbar);
+        $this->assertInstanceOf(\Konekt\Menu\Menu::class, $navbar);
         $this->assertCount(1, $navbar->items);
     }
 

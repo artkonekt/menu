@@ -19,7 +19,7 @@ class Item
     /**
      * Reference to the menu builder
      *
-     * @var \Konekt\Menu\Builder
+     * @var \Konekt\Menu\Menu
      */
     protected $builder;
 
@@ -160,7 +160,7 @@ class Item
      */
     public function divide($attributes = array())
     {
-        $attributes['class'] = Builder::formatGroupClass($attributes, array('class' => 'divider'));
+        $attributes['class'] = Menu::formatGroupClass($attributes, array('class' => 'divider'));
         $this->divider = $attributes;
 
         return $this;
@@ -383,7 +383,7 @@ class Item
             return $this;
         }
 
-        $this->attributes['class'] = Builder::formatGroupClass(
+        $this->attributes['class'] = Menu::formatGroupClass(
             ['class' => $this->builder->conf('active_class')],
             $this->attributes
         );

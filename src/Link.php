@@ -59,7 +59,7 @@ class Link
      */
     public function active()
     {
-        $this->attributes['class'] = Builder::formatGroupClass(['class' => 'active'], $this->attributes);
+        $this->attributes['class'] = Menu::formatGroupClass(['class' => 'active'], $this->attributes);
         $this->isActive            = true;
 
         return $this;

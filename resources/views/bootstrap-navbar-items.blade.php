@@ -15,6 +15,6 @@ array('items' => $item->children()))
     @endif
   </li>
   @if($item->divider)
-  	<li{!! Konekt\Menu\Builder::attributes($item->divider) !!}></li>
+  	<li{!! Konekt\Menu\Menu::attributes($item->divider) !!}></li>
   @endif
 @endforeach

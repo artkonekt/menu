@@ -62,63 +62,34 @@ A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
 
 ## Installation
 
-In `require` key of `composer.json` file, add `lavary/laravel-menu": "dev-master`:
-
-```
-...
-"require": {
-	"laravel/framework": "5.1.*",
-	"lavary/laravel-menu": "dev-master"
-  }  
-```
-  
-Run the `composer update` command:
-
 ```bash
-composer update
+composer require konekt/menu
 ```
 
-Now, append Laravel Menu service provider to `providers` array in `config/app.php`.
+Now, append Laravel Menu service provider to `providers` array in `config/app.php`:
+
+> *Note*: On Laravel 5.5 and above this step gets automatically done by composer.
 
 ```php
-<?php
-
+//...
 'providers' => [
-
-        /*
-         * Laravel Framework Service Providers...
-         */
-        Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
-        Illuminate\Auth\AuthServiceProvider::class,
-        Illuminate\Broadcasting\BroadcastServiceProvider::class,
-	
-	...
-        
-        'Lavary\Menu\ServiceProvider',
-        
-        ...
-
-],
+    // Other Service Providers    
+    'Konekt\Menu\MenuServiceProvider',
+    
+    //...
+]
 ?>
 ```
+#### Register The Facade
 
-At the end of `config/app.php` add `'Menu'    => 'Lavary\Menu\Facade'` to the `$aliases` array:
+You can also register the `Menu` facade in `config/app.php`:
 
 ```php
-<?php
-
 'aliases' => [
-
-    'App'       => Illuminate\Support\Facades\App::class,
-    'Artisan'   => Illuminate\Support\Facades\Artisan::class,
-    ...
-    'Menu'       => 'Lavary\Menu\Facade',
-
-],
-?>
+    // ...
+    'Menu' => Konekt\Menu\Facades\Menu::class
+]
 ```
-
-This registers the package with Laravel and creates an alias called `Menu`.
 
 
 ## Getting Started
@@ -130,7 +101,6 @@ Here is a basic usage:
 
 
 ```php
-<?php
 Menu::make('MyNavBar', function($menu){
   
   $menu->add('Home');
@@ -139,7 +109,6 @@ Menu::make('MyNavBar', function($menu){
   $menu->add('Contact',  'contact');
   
 });
-?>
 ```
 
 **Attention** `$MyNavBar` is just a hypothetical name I used in these examples; You may name your menus whatever you please.
