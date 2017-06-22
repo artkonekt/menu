@@ -20,6 +20,7 @@ use Illuminate\Foundation\AliasLoader;
 
 abstract class TestCase extends OrchestraTestCase
 {
+    const APP_URL = 'http://menu.test';
     /**
      * @param \Illuminate\Foundation\Application $app
      *
@@ -41,6 +42,15 @@ abstract class TestCase extends OrchestraTestCase
     {
         // Register the facade
         AliasLoader::getInstance()->alias('Menu', Menu::class);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function resolveApplicationConfiguration($app)
+    {
+        parent::resolveApplicationConfiguration($app);
+        $app['config']->set('app.url', self::APP_URL);
     }
 
 

@@ -12,6 +12,7 @@
 namespace Konekt\Menu;
 
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;
+use View;
 
 /**
  * Menu Repository class contains several menu instances
@@ -30,7 +31,6 @@ class Repository
      */
     public function __construct()
     {
-        // creating a collection for storing menus
         $this->menus = collect();
     }
 
@@ -38,62 +38,52 @@ class Repository
     /**
      * Create a new menu instance
      *
-     * @param  string   $name
-     * @param  callable $callback
+     * @param string    $name       The name of the menu
+     * @param array     $options    Set of options
      *
-     * @return Repository
+     * @see processOptions() method
+     *
+     * @return Menu
      * @throws MenuAlreadyExistsException
      */
-    public function create($name, $callback = null)
+    public function create($name, $options = [])
     {
         if ($this->menus->has($name)) {
             throw new MenuAlreadyExistsException("Can not create menu named `$name` because it already exists");
         }
 
-        $this->menus->put($name, new Menu($name, $this->loadConf($name)));
+        $this->menus->put($name, $instance = MenuFactory::create($name, $options));
 
-        if (is_callable($callback)) {
-            // Registering the items
-            call_user_func($callback, $this->menus->get($name));
-        }
+        return $instance;
+    }
 
+    /**
+     * Return Menu instance from the collection by name
+     *
+     * @param  string $name
+     *
+     * @return Menu|null
+     */
+    public function get($name)
+    {
         return $this->menus->get($name);
     }
 
     /**
-     * Loads and merges configuration data
+     * Returns whether repo has menu with name
      *
      * @param  string $name
      *
-     * @return array
-     */
-    public function loadConf($name)
-    {
-        $options = config('menu.settings');
-        $name    = strtolower($name);
-
-        if (isset($options[$name]) && is_array($options[$name])) {
-            return array_merge($options['default'], $options[$name]);
-        }
-
-        return $options['default'];
-    }
-
-    /**
-     * Return Menu instance from the collection by key
-     *
-     * @param  string $key
-     *
      * @return Menu|null
      */
-    public function get($key)
+    public function has($name)
     {
-        return $this->menus->get($key);
+        return $this->menus->has($name);
     }
 
 
     /**
-     * Alias for getCollection
+     * Returns all the menus (as collection)
      *
      * @return \Illuminate\Support\Collection
      */

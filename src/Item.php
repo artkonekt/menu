@@ -11,110 +11,55 @@
 
 namespace Konekt\Menu;
 
-use Illuminate\Support\Str;
-
 class Item
 {
 
-    /**
-     * Reference to the menu builder
-     *
-     * @var \Konekt\Menu\Menu
-     */
-    protected $builder;
+    /** @var string The name (or id) of the menu item */
+    public $name;
 
-    /**
-     * The ID of the menu item
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * Item's title
-     *
-     * @var string
-     */
+    /** @var string */
     public $title;
 
-    /**
-     * Item's title in camelCase
-     *
-     * @var string
-     */
-    public $nickname;
+    /** @var Item   Parent item, if any */
+    public $parent;
 
-    /**
-     * Item's seprator from the rest of the items, if it has any.
-     *
-     * @var array
-     */
-    public $divider = array();
+    /** @var bool   Flag for active state */
+    public $isActive = false;
 
-    /**
-     * Parent Id of the menu item
-     *
-     * @var int
-     */
-    protected $parent;
-
-    /**
-     * Extra information attached to the menu item
-     *
-     * @var array
-     */
-    protected $data = [];
-
-    /**
-     * Attributes of menu item
-     *
-     * @var array
-     */
+    /** @var array */
     public $attributes = [];
 
-    /**
-     * Flag for active state
-     *
-     * @var bool
-     */
-    public $isActive = false;
+    /** @var array  Extra information attached to the menu item */
+    protected $data = [];
+
+    /** @var Menu   Reference to the menu holding the item */
+    protected $menu;
+
+    private $reserved = ['route', 'action', 'url', 'prefix', 'parent'];
 
     /**
      * Class constructor
      *
-     * @param  \Konekt\Menu\Repository $builder
-     * @param                    $id
-     * @param  string                  $title
-     * @param                    $options
+     * @param  Menu   $menu
+     * @param  string $name
+     * @param  string $title
+     * @param  array  $options
      */
-    public function __construct($builder, $id, $title, $options)
+    public function __construct(Menu $menu, $name, $title, $options)
     {
-        $this->builder    = $builder;
-        $this->id         = $id;
+        $this->menu       = $menu;
+        $this->name       = $name;
         $this->title      = $title;
-        $this->nickname   = isset($options['nickname']) ? $options['nickname'] : camel_case(Str::ascii($title));
-        $this->attributes = $this->builder->extractAttributes($options);
-        $this->parent     = (is_array($options) && isset($options['parent'])) ? $options['parent'] : null;
+        $this->attributes = array_except($options, $this->reserved);
+        $this->parent     = array_get($options, 'parent', null);
 
 
-        // Storing path options with each link instance.
-        if ( ! is_array($options)) {
-            $path = array('url' => $options);
-        } elseif (isset($options['raw']) && $options['raw'] == true) {
-            $path = null;
-        } else {
-            $path = array_only($options, array('url', 'route', 'action', 'secure'));
-        }
+        $path       = array_only($options, array('url', 'route', 'action'));
+        $this->link = new Link($path, $this->menu->config->activeClass);
 
-        if ( ! is_null($path)) {
-            $path['prefix'] = $this->builder->getLastGroupPrefix();
-        }
-
-        $this->link = $path ? new Link($path) : null;
-
-        // Activate the item if items's url matches the request uri
-        if (true === $this->builder->conf('auto_activate')) {
-            $this->checkActivationStatus();
+        // Activate the item if items's url matches the request URI
+        if ($this->menu->config->autoActivate && $this->url() == \Request::url()) {
+            $this->activate();
         }
     }
 
@@ -136,7 +81,7 @@ class Item
 
         $options['parent'] = $this->id;
 
-        return $this->builder->add($title, $options);
+        return $this->menu->add($title, $options);
     }
 
     /**
@@ -148,7 +93,7 @@ class Item
     {
         $options['parent'] = $this->id;
 
-        return $this->builder->raw($title, $options);
+        return $this->menu->raw($title, $options);
     }
 
     /**
@@ -177,7 +122,7 @@ class Item
      */
     public function group($attributes, $closure)
     {
-        $this->builder->group($attributes, $closure);
+        $this->menu->group($attributes, $closure);
     }
 
     /**
@@ -211,18 +156,11 @@ class Item
      */
     public function url()
     {
-        // If the item has a link proceed:
-        if ( ! is_null($this->link)) {
-
-            // If item's link has `href` property explcitly defined
-            // return it
-            if ($this->link->href) {
-                return $this->link->href;
-            }
-
-            // Otherwise dispatch to the proper address
-            return $this->builder->dispatch($this->link->path);
+        if (!$this->link) {
+            return null;
         }
+
+        return $this->link->url();
     }
 
 
@@ -257,113 +195,45 @@ class Item
      */
     public function hasChildren()
     {
-        return count($this->builder->whereParent($this->id)) or false;
+        return count($this->menu->whereParent($this->id)) or false;
     }
 
     /**
      * Returns childeren of the item
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function children()
     {
-        return $this->builder->whereParent($this->id);
+        return $this->menu->whereParent($this->id);
     }
 
     /**
      * Returns all childeren of the item
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function all()
     {
-        return $this->builder->whereParent($this->id, true);
+        return $this->menu->whereParent($this->id, true);
     }
 
     /**
-     * Decide if the item should be active
-     *
+     * Sets the item as active
      */
-    public function checkActivationStatus()
+    public function activate()
     {
-        if ($this->builder->conf['restful'] == true) {
-
-            $path  = ltrim(parse_url($this->url(), PHP_URL_PATH), '/');
-            $rpath = \Request::path();
-
-            if ($this->builder->conf['rest_base']) {
-                $base = (is_array($this->builder->conf['rest_base'])) ? implode('|',
-                    $this->builder->conf['rest_base']) : $this->builder->conf['rest_base'];
-
-                list($path, $rpath) = preg_replace('@^(' . $base . ')/@', '', [$path, $rpath], 1);
-            }
-
-            if (preg_match("@^{$path}(/.+)?\z@", $rpath)) {
-                $this->activate();
-            }
+        if ($this->menu->config->activeElement == 'item') {
+            $this->active();
         } else {
-            if ($this->url() == \Request::url()) {
-                $this->activate();
-            }
-        }
-    }
-
-    /**
-     * Set nickname for the item manually
-     *
-     * @param string $nickname
-     *
-     * @return static
-     */
-    public function nickname($nickname = null)
-    {
-        if (is_null($nickname)) {
-            return $this->nickname;
-        }
-
-        $this->nickname = $nickname;
-
-        return $this;
-    }
-
-    /**
-     * Set id for the item manually
-     *
-     * @param  mixed $id
-     *
-     * @return static
-     */
-    public function id($id = null)
-    {
-        if (is_null($id)) {
-            return $this->id;
-        }
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Activate the item
-     *
-     * @param \Konekt\Menu\Item $item
-     */
-    public function activate(Item $item = null)
-    {
-        $item = is_null($item) ? $this : $item;
-
-        // Check to see which element should have class 'active' set.
-        if ($this->builder->conf('active_element') == 'item') {
-            $item->active();
-        } else {
-            $item->link->active();
+            $this->link->activate();
         }
 
         // If parent activation is enabled:
-        if (true === $this->builder->conf('activate_parents')) {
+        if ($this->menu->config->activateParents) {
             // Moving up through the parent nodes, activating them as well.
-            if ($item->parent) {
-                $this->activate($this->builder->whereId($item->parent)->first());
+            if ($this->parent) {
+                $this->parent->activate();
             }
         }
     }
@@ -384,7 +254,7 @@ class Item
         }
 
         $this->attributes['class'] = Menu::formatGroupClass(
-            ['class' => $this->builder->conf('active_class')],
+            ['class' => $this->menu->config->activeClass],
             $this->attributes
         );
 
@@ -406,7 +276,7 @@ class Item
             $this->data = array_merge($this->data, array_change_key_case($args[0]));
 
             // Cascade data to item's children if cascade_data option is enabled
-            if ($this->builder->conf['cascade_data']) {
+            if ($this->menu->conf['cascade_data']) {
                 $this->cascade_data($args);
             }
             return $this;
@@ -414,7 +284,7 @@ class Item
             $this->data[strtolower($args[0])] = $args[1];
 
             // Cascade data to item's children if cascade_data option is enabled
-            if ($this->builder->conf['cascade_data']) {
+            if ($this->menu->conf['cascade_data']) {
                 $this->cascade_data($args);
             }
             return $this;

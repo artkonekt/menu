@@ -11,9 +11,9 @@
 
 namespace Konekt\Menu;
 
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Collection;
 
-class Collection extends BaseCollection
+class ItemCollection extends Collection
 {
 
     /**
@@ -21,7 +21,7 @@ class Collection extends BaseCollection
      *
      * @param  mixed
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function attr()
     {
@@ -43,7 +43,7 @@ class Collection extends BaseCollection
      *
      * @param  mixed
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function data()
     {
@@ -65,7 +65,7 @@ class Collection extends BaseCollection
      *
      * @param  string
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function append($html)
     {
@@ -81,7 +81,7 @@ class Collection extends BaseCollection
      *
      * @param  string
      *
-     * @return \Konekt\Menu\Collection
+     * @return \Konekt\Menu\ItemCollection
      */
     public function prepend($html, $key = null)
     {

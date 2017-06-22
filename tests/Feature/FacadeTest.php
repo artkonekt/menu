@@ -20,12 +20,15 @@ class FacadeTest extends TestCase
 {
     public function testMenuCanBeCreatedWithFacade()
     {
-        $navbar = Menu::create('navbar', function($menu) {
-            $menu->add('Home');
-        });
+        /** @var \Konekt\Menu\Menu $menu */
+        $menu = Menu::create('navbar');
+        $menu->addItem('home', 'Home');
+        $menu->addItem('twitter', 'Twitter', 'http://to.co');
 
-        $this->assertInstanceOf(\Konekt\Menu\Menu::class, $navbar);
-        $this->assertCount(1, $navbar->items);
+        $this->assertInstanceOf(\Konekt\Menu\Menu::class, $menu);
+        $this->assertCount(2, $menu->items);
+        $this->assertNull($menu->getItem('home')->url());
+        $this->assertEquals('http://to.co', $menu->getItem('twitter')->url());
     }
 
 }

@@ -14,42 +14,31 @@ namespace Konekt\Menu;
 class Link
 {
 
-    /**
-     * Path Information
-     *
-     * @var array
-     */
+    /** @var array  Path Information */
     protected $path = [];
 
-    /**
-     * Explicit href for the link
-     *
-     * @var string
-     */
+    /** @var  string */
+    protected $activeClass;
+
+    /** @var string Explicit href for the link */
     protected $href;
 
-    /**
-     * Link attributes
-     *
-     * @var array
-     */
-    public $attributes = [];
+    /** @var array  Link attributes */
+    protected $attributes = [];
 
-    /**
-     * Flag for active state
-     *
-     * @var bool
-     */
+    /** @var bool   Flag for active state */
     public $isActive = false;
 
     /**
      * Class constructor
      *
      * @param  array $path
+     * @param string $activeClass
      */
-    public function __construct($path = [])
+    public function __construct($path = [], $activeClass = 'active')
     {
-        $this->path = $path;
+        $this->path        = $path;
+        $this->activeClass = $activeClass;
     }
 
     /**
@@ -57,9 +46,9 @@ class Link
      *
      * @return static
      */
-    public function active()
+    public function activate()
     {
-        $this->attributes['class'] = Menu::formatGroupClass(['class' => 'active'], $this->attributes);
+        $this->attributes['class'] = Utils::addHtmlClass(array_get($this->attributes, 'class', ''), $this->activeClass);
         $this->isActive            = true;
 
         return $this;
@@ -80,15 +69,23 @@ class Link
     }
 
     /**
-     * Make the url secure
+     * Return the URL for the link
      *
-     * @return static
+     * @return string|null
      */
-    public function secure()
+    public function url()
     {
-        $this->path['secure'] = true;
+        if (!is_null($this->href)) {
+            return $this->href;
+        } elseif (isset($this->path['url'])) {
+            return $this->getUrl();
+        } elseif (isset($this->path['route'])) {
+            return $this->getRoute();
+        } elseif (isset($this->path['action'])) {
+            return $this->getControllerAction();
+        }
 
-        return $this;
+        return null;
     }
 
     /**
@@ -120,16 +117,69 @@ class Link
     /**
      * Check for a method of the same name if the attribute doesn't exist.
      *
-     * @param  string $prop
+     * @param  string $property
      *
      * @return mixed
      */
-    public function __get($prop)
+    public function __get($property)
     {
-        if (property_exists($this, $prop)) {
-            return $this->$prop;
+        return $this->attr($property);
+    }
+
+    public function __set($property, $value)
+    {
+        return $this->attr($property, $value);
+    }
+
+    /**
+     * Get the action for "url" option.
+     *
+     * @return string
+     */
+    protected function getUrl()
+    {
+        $url = $this->path['url'];
+
+        $uri    = is_array($url) ? $url[0] : $url;
+        $params = is_array($url) ? array_slice($url, 1) : null;
+
+        if (Utils::isAbsoluteUrl($uri)) {
+            return $uri;
         }
 
-        return $this->attr($prop);
+        return url($uri, $params);
     }
+
+    /**
+     * Get the url for a "route" option.
+     *
+     * @return string
+     */
+    protected function getRoute()
+    {
+        $route = $this->path['route'];
+        if (is_array($route)) {
+            return route($route[0], array_slice($route, 1));
+        }
+
+        return route($route);
+    }
+
+    /**
+     * Get the url for an "action" option
+     *
+     * @return string
+     */
+    protected function getControllerAction()
+    {
+        $action = $this->path['action'];
+        if (is_array($action)) {
+            return action($action[0], array_slice($action, 1));
+        }
+
+        return action($action);
+    }
+
+
+
 }

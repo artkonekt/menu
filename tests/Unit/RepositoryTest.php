@@ -26,7 +26,7 @@ class RepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->repo = new Repository();
+        $this->repo = $this->app->make('menu');
     }
 
     public function testEmptyMenuCanBeCreated()
@@ -37,27 +37,28 @@ class RepositoryTest extends TestCase
         $this->assertCount(0, $sidebar->items);
     }
 
-    public function testMenuCanBeCreatedWithItemsInClosure()
+    public function testMenuItemsCanBeCreated()
     {
-        $sidebar = $this->repo->create('sidebar', function ($menu) {
-            $menu->add('Home', 'home');
-            $menu->add('Somewhere else', 'somewhere-else');
-        });
+        $sidebar = $this->repo->create('sidebar');
+        $sidebar->addItem('home', 'Home');
+        $sidebar->addItem('somewhere-else', 'Somewhere else');
 
         $this->assertCount(2, $sidebar->items);
     }
 
     public function testMenuCanBeRetrievedByKey()
     {
-        $this->repo->create('sidebar', function ($menu) {
-            $menu->add('Moscow', 'moscow');
-            $menu->add('Tallin', 'tallin');
-            $menu->add('Göteborg', 'goteborg');
-        });
+        $menu = $this->repo->create('sidebar');
+        $menu->addItem('moscow', 'Moscow');
+        $menu->addItem('tallin', 'Tallin');
+        $menu->addItem('goteborg', 'Göteborg');
 
         $sidebar = $this->repo->get('sidebar');
         $this->assertNotNull($sidebar);
         $this->assertCount(3, $sidebar->items);
+
+        // Test if facade also gives the same one
+        $this->assertEquals($sidebar, \Menu::get('sidebar'));
     }
 
     public function testNonExistentEntryReturnsNull()
@@ -85,6 +86,24 @@ class RepositoryTest extends TestCase
         $this->assertArrayHasKey('bang', $this->repo->all()->all());
         $this->assertArrayHasKey('pow', $this->repo->all()->all());
         $this->assertArrayHasKey('phitang', $this->repo->all()->all());
+    }
+
+    public function testCanShareMenuToViews()
+    {
+        $footer = $this->repo->create('footer', ['share' => true]);
+        $this->assertEquals($footer, \View::shared('footer'));
+
+        $header = $this->repo->create('header', ['share' => 'nav']);
+        $this->assertEquals($header, \View::shared('nav'));
+    }
+
+    public function testDoesntShareMenuToViewsByDefault()
+    {
+        $this->repo->create('sidebar');
+        $this->assertNull(\View::shared('sidebar'));
+
+        $this->repo->create('xmenu', ['share' => false]);
+        $this->assertNull(\View::shared('xmenu'));
     }
 
 }

@@ -1,6 +1,6 @@
 # Laravel Menu
 
-> This is a modified version of [Lavary Menu](https://github.com/lavary/laravel-menu)
+> This is a rework of [Lavary Menu](https://github.com/lavary/laravel-menu)
 
 [![Latest Stable Version](https://poser.pugx.org/konekt/menu/version.png)](https://packagist.org/packages/konekt/menu)
 [![Latest Unstable Version](https://poser.pugx.org/konekt/menu/v/unstable.svg)](https://packagist.org/packages/konekt/menu)
@@ -94,47 +94,79 @@ You can also register the `Menu` facade in `config/app.php`:
 
 ## Getting Started
 
-You can define the menu definitions inside a [laravel middleware](http://laravel.com/docs/master/middleware). As a result anytime a request hits your application, the menu objects will be available to all your views.
+You can define the menu definitions inside a [middleware](http://laravel.com/docs/master/middleware), so  any request hits your application, the menu objects will be available.
 
-
-Here is a basic usage:
-
+### Create A Menu
 
 ```php
-Menu::make('MyNavBar', function($menu){
-  
-  $menu->add('Home');
-  $menu->add('About',    'about');
-  $menu->add('services', 'services');
-  $menu->add('Contact',  'contact');
-  
+$sidebar = Menu::create('sidebar');
+$sidebar->add('Home',  '/');
+$sidebar->add('About', 'about');
+
+// Alternatively:
+Menu::make('sidebar', function($menu){
+  $menu->add('Home',  '/');
+  $menu->add('About', 'about');  
 });
 ```
 
-**Attention** `$MyNavBar` is just a hypothetical name I used in these examples; You may name your menus whatever you please.
+You can reference it later as `Menu::get('sidebar')`.
 
-In the above example `Menu::make()` creates a menu named `MyNavBar`, Adds the menu instance to the `Menu::collection` and ultimately makes `$myNavBar` object available across all application views.
+### Access Menu In Views
 
-This method accepts a callable inside which you can define your menu items. `add` method defines a new item. It receives two parameters, the first one is the item title and the second one is options.
-
-*options* can be a simple string representing a URL or an associative array of options and HTML attributes which we'll discuss shortly.
-
-
-
-**To render the menu in your view:**
-
-`Laravel-menu` provides three rendering methods out of the box. However you can create your own rendering method using the right methods and attributes.
-
-As noted earlier, `laravel-menu` provides three rendering formats out of the box, `asUl()`, `asOl()` and `asDiv()`. You can read about the details [here](#rendering-methods).
+If you want the make the menu object available across all application views pass the 'share' option for `create()`:
 
 ```php
-{!! $MyNavBar->asUl() !!}
+Menu::make('sidebar', null, ['share' => true]); // will be $sidebar in views
+Menu::make('main', null, ['share' => 'mainMenu']); // will be $mainMenu in views
+```
+
+In a blade view:
+
+```blade
+<nav>
+    @foreach($mainMenu->items as $item)
+        <div class="nav-link><a href="{{ $item->url }}">{{ $item->title }}</a></div>
+    @endforeach
+</nav>
+```
+
+### Adding Items
+
+```php
+$navbar = Menu::create('navbar');
+
+// Simple link; to '/' via the URL helper
+$navbar->add('Home', '/');
+
+// Named route
+$navbar->add('Clients', ['route' => 'client.index']);
+// Named route with parameter
+$navbar->add('My Profile', ['route' => ['user.show', 'id' => Auth::user()->id]]);
+
+// Refer to an action
+$navbar->add('Projects', ['action' => 'ProjectController@index']);
+// Action with parameter
+$navbar->add('Issue 7', ['action' => ['IssueController@edit', 'id' => 7]]);
+```
+
+The `add()` method receives two parameters, the first one is the item title and the second one is options.
+
+*options* can be a simple string representing a URL or an associative array of options and HTML attributes which is described below.
+
+### Render The Menu
+
+This component provides 3 rendering methods out of the box, `asUl()`, `asOl()` and `asDiv()`.
+You can read about the details [here](#rendering-methods).
+
+```blade
+{!! $myMenu->asUl() !!}
 ```
 
 You can also access the menu object via the menu collection:
 
-```php
-{!! Menu::get('MyNavBar')->asUl() !!}
+```blade
+{!! Menu::get('navbar')->asUl() !!}
 ```
 
 This will render your menu like so:
@@ -147,108 +179,15 @@ This will render your menu like so:
   <li><a href="http://yourdomain.com/contact">Contact</a></li>
 </ul>
 ```
-And that's all about it!
-
-
-## Routing
-
-#### URLs
-
-You can simply assign a URL to your menu item by passing the URL as the second argument to `add` method:
-
-```php
-<?php
-// ...
-$menu->add('About Us', 'about-us');
-// ...
-```
-
-#### Named Routes
-
-`laravel-menu` supports named routes as well:
-
-This time instead of passing a simple string to `add()`, we pass an associative with key `route` and a named route as value:
-
-```php
-<?php
-
-// Suppose we have these routes defined in our app/routes.php file 
-
-//...
-Route::get('/',        array('as' => 'home.page',  function(){...}));
-Route::get('about',    array('as' => 'page.about', function(){...}));
-//...
-
-// Now we make the menu:
-
-Menu::make('MyNavBar', function($menu){
-  
-  $menu->add('Home',     array('route'  => 'home.page'));
-  $menu->add('About',    array('route'  => 'page.about'));
-  // ...
-
-});
-?>
-```
-
-
-#### Controller Actions
-
-Laravel Menu supports controller actions as well.
-
-You will just need to set `action` key of your options array to a controller action:
-
-```php
-<?php
-
-// Suppose we have these routes defined in our app/Http/routes.php file
-
-// ...
-Route::get('services', 'ServiceController@index');
-//...
-
-
-  // ...
-  $menu->add('services', array('action' => 'ServicesController@index'));
-  // ...
-
-?>
-```
-
-
-**Note:** if you need to send some data to routes, URLs or controller actions as a query string, you can simply include them in an array along with the route, action or URL value:
-
-```php
-<?php
-Menu::make('MyNavBar', function($menu){
-  
-  $menu->add('Home',     array('route'  => 'home.page'));
-  $menu->add('About',    array('route'  => array('page.about', 'template' => 1)));
-  $menu->add('services', array('action' => array('ServicesController@index', 'id' => 12)));
- 
-  $menu->add('Contact',  'contact');
-
-});
-?>
-```
 
 #### HTTPS
 
 If you need to serve the route over HTTPS, call `secure()` on the item's `link` attribute or alternatively add key `secure` to the options array and set it to `true`:
 
 ```php
-<?php
-	// ...
-	$menu->add('Members', 'members')->link->secure();
-	
-	
-	// or alternatively use the following method
-	
-	$menu->add('Members', array('url' => 'members', 'secure' => true));
-	
-	// ...
+$menu->add('Members', 'members')->link->secure();
 
-?>
+$menu->add('Members', array('url' => 'members', 'secure' => true));
 ```
 
 The output as `<ul>` would be:
@@ -733,7 +672,7 @@ $menu->add('About')->link->href('#');
 
 ## Active Item
 
-You can mark an item as activated using `active()` on that item:
+You can mark an item as activated using `activate()` on that item:
 
 ```php
 <?php
