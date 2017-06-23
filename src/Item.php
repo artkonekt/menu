@@ -11,6 +11,7 @@
 
 namespace Konekt\Menu;
 
+use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Traits\HasAttributes;
 use Konekt\Menu\Traits\Renderable;
 use Request;
@@ -59,7 +60,7 @@ class Item
         $this->name       = $name;
         $this->title      = $title;
         $this->attributes = array_except($options, $this->reserved);
-        $this->parent     = array_get($options, 'parent', null);
+        $this->parent     = $this->resolveParent(array_get($options, 'parent', null));
         $this->renderer   = array_get($options, 'renderer', null);
 
         $path       = array_only($options, array('url', 'route', 'action'));
@@ -332,6 +333,24 @@ class Item
         }
 
         return false; // No match
+    }
+
+    private function resolveParent($parent)
+    {
+        if (!$parent || empty($parent)) {
+            return null;
+        } elseif ($parent instanceof Item) {
+            return $parent;
+        } elseif ($this->menu->items->has($parent)) {
+            return $this->menu->getItem($parent);
+        }
+
+        throw new MenuItemNotFoundException(
+            sprintf('Item named `%s` could not be found in the `%s` menu',
+                (string)$parent,
+                $this->menu->name
+            )
+        );
     }
 
 }

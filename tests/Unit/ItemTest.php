@@ -14,11 +14,44 @@ namespace Konekt\Menu\Tests\Unit;
 
 
 use Illuminate\Http\Request;
+use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Menu;
 use Konekt\Menu\Tests\TestCase;
 
 class ItemTest extends TestCase
 {
+    public function testItemParentCanBeResolvedProperly()
+    {
+        $menu = \Menu::create('uberGigaMenu');
+
+        $menu->addItem('about', 'About', '/about');
+
+        $this->assertEquals(
+            $menu->about,
+            $menu->about->addSubItem('who-we-are', 'Who We are', '/who-we-are')->parent
+        );
+
+        $this->assertEquals(
+            $menu->about,
+            $menu->getItem('about')->addSubItem('what-we-do', 'What We Do', '/what-we-do')->parent
+        );
+
+        $this->assertEquals(
+            $menu->about,
+            $menu->addItem('our-goals', 'Our Goals',[
+                'parent' => 'about',
+                'url' => '/our-goals'
+            ])->parent
+        );
+    }
+
+    public function testInvalidParentThrowsException()
+    {
+        $menu = \Menu::create('whoaa');
+        $this->expectException(MenuItemNotFoundException::class);
+        $menu->addItem('shh', 'Shh', ['parent' => 'inexistent']);
+    }
+
     public function testOnlyItemGetsActivatedIfActiveElementIsItem()
     {
         $menu = \Menu::create('main', ['active_element' => 'item']);

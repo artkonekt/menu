@@ -148,9 +148,8 @@ class ItemCollection extends Collection
 
         $attribute = strtolower($matches[1]);
         $value     = $args ? $args[0] : null;
-        $recursive = isset($args[1]) ? $args[1] : false;
 
-        return $this->filterByProperty($attribute, $value, $recursive);
+        return $this->filterByProperty($attribute, $value);
     }
 
     /**
