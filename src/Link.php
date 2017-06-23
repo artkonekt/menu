@@ -11,8 +11,11 @@
 
 namespace Konekt\Menu;
 
+use Konekt\Menu\Traits\HasAttributes;
+
 class Link
 {
+    use HasAttributes;
 
     /** @var array  Path Information */
     protected $path = [];
@@ -22,9 +25,6 @@ class Link
 
     /** @var string Explicit href for the link */
     protected $href;
-
-    /** @var array  Link attributes */
-    protected $attributes = [];
 
     /** @var bool   Flag for active state */
     public $isActive = false;
@@ -88,31 +88,6 @@ class Link
         return null;
     }
 
-    /**
-     * Add attributes to the link
-     *
-     * @param  mixed
-     *
-     * @return string|Link|array
-     */
-    public function attr()
-    {
-        $args = func_get_args();
-
-        if (isset($args[0]) && is_array($args[0])) {
-            $this->attributes = array_merge($this->attributes, $args[0]);
-
-            return $this;
-        } elseif (isset($args[0]) && isset($args[1])) {
-            $this->attributes[$args[0]] = $args[1];
-
-            return $this;
-        } elseif (isset($args[0])) {
-            return isset($this->attributes[$args[0]]) ? $this->attributes[$args[0]] : null;
-        }
-
-        return $this->attributes;
-    }
 
     /**
      * Check for a method of the same name if the attribute doesn't exist.
@@ -125,6 +100,7 @@ class Link
     {
         return $this->attr($property);
     }
+
 
     public function __set($property, $value)
     {

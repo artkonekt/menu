@@ -63,7 +63,7 @@ class Menu
     {
         $options = is_string($options) ? ['url' => $options] : $options;
         $item = new Item($this, $name, $title, $options);
-        $this->items->put($name, $item);
+        $this->items->add($item);
 
         return $item;
     }
@@ -256,80 +256,6 @@ class Menu
         }
     }
 
-    /**
-     * Filter items recursively
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return \Konekt\Menu\ItemCollection
-     */
-    public function filterRecursive($attribute, $value)
-    {
-        $collection = new ItemCollection();
-
-        // Iterate over all the items in the main collection
-        $this->items->each(function ($item) use ($attribute, $value, &$collection) {
-
-            if ( ! $this->hasProperty($attribute)) {
-                return false;
-            }
-
-            if ($item->$attribute == $value) {
-
-                $collection->push($item);
-
-                // Check if item has any children
-                if ($item->hasChildren()) {
-
-                    $collection = $collection->merge($this->filterRecursive($attribute, $item->id));
-                }
-            }
-
-        });
-
-        return $collection;
-    }
-
-    /**
-     * Search the menu based on an attribute
-     *
-     * @param string $method
-     * @param array  $args
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function __call($method, $args)
-    {
-        preg_match('/^[W|w]here([a-zA-Z0-9_]+)$/', $method, $matches);
-
-        if ($matches) {
-            $attribute = strtolower($matches[1]);
-        } else {
-            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $method . '()', E_USER_ERROR);
-        }
-
-        $value     = $args ? $args[0] : null;
-        $recursive = isset($args[1]) ? $args[1] : false;
-
-        if ($recursive) {
-            return $this->filterRecursive($attribute, $value);
-        }
-
-        return $this->items->filter(function ($item) use ($attribute, $value) {
-
-            if ( ! $item->hasProperty($attribute)) {
-                return false;
-            }
-
-            if ($item->$attribute == $value) {
-                return true;
-            }
-
-            return false;
-
-        })->values();
-    }
 
     /**
      * Returns menu item by name
@@ -338,8 +264,7 @@ class Menu
      */
     public function __get($prop)
     {
-        return $this->whereNickname($prop)
-                    ->first();
+        return $this->items->get($prop);
     }
 
 }

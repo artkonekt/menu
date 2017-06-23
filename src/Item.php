@@ -11,8 +11,12 @@
 
 namespace Konekt\Menu;
 
+use Konekt\Menu\Traits\HasAttributes;
+use Request;
+
 class Item
 {
+    use HasAttributes;
 
     /** @var string The name (or id) of the menu item */
     public $name;
@@ -26,14 +30,14 @@ class Item
     /** @var bool   Flag for active state */
     public $isActive = false;
 
-    /** @var array */
-    public $attributes = [];
-
     /** @var array  Extra information attached to the menu item */
     protected $data = [];
 
     /** @var Menu   Reference to the menu holding the item */
     protected $menu;
+
+    /** @var string URL pattern to match (if no exact match) */
+    private $activeUrlPattern;
 
     private $reserved = ['route', 'action', 'url', 'prefix', 'parent'];
 
@@ -58,7 +62,7 @@ class Item
         $this->link = new Link($path, $this->menu->config->activeClass);
 
         // Activate the item if items's url matches the request URI
-        if ($this->menu->config->autoActivate && $this->url() == \Request::url()) {
+        if ($this->menu->config->autoActivate && $this->currentUrlMatches()) {
             $this->activate();
         }
     }
@@ -66,88 +70,20 @@ class Item
     /**
      * Creates a sub Item
      *
+     * @param  string       $name
      * @param  string       $title
      * @param  string|array $options
      *
-     * @return void
+     * @return Item
      */
-    public function add($title, $options = '')
+    public function addSubItem($name, $title, $options = [])
     {
-        if ( ! is_array($options)) {
-            $url            = $options;
-            $options        = array();
-            $options['url'] = $url;
-        }
+        $options = is_array($options) ? $options : ['url' => $options];
+        $options['parent'] = $this;
 
-        $options['parent'] = $this->id;
-
-        return $this->menu->add($title, $options);
+        return $this->menu->addItem($name, $title, $options);
     }
 
-    /**
-     * Add a plain text item
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function raw($title, array $options = array())
-    {
-        $options['parent'] = $this->id;
-
-        return $this->menu->raw($title, $options);
-    }
-
-    /**
-     * Insert a seprator after the item
-     *
-     * @param array $attributes
-     *
-     * @return static
-     */
-    public function divide($attributes = array())
-    {
-        $attributes['class'] = Menu::formatGroupClass($attributes, array('class' => 'divider'));
-        $this->divider = $attributes;
-
-        return $this;
-    }
-
-
-    /**
-     * Group children of the item
-     *
-     * @param  array    $attributes
-     * @param  callable $closure
-     *
-     * @return void
-     */
-    public function group($attributes, $closure)
-    {
-        $this->menu->group($attributes, $closure);
-    }
-
-    /**
-     * Add attributes to the item
-     *
-     * @param  mixed
-     *
-     * @return string|\Konekt\Menu\Item
-     */
-    public function attr()
-    {
-        $args = func_get_args();
-
-        if (isset($args[0]) && is_array($args[0])) {
-            $this->attributes = array_merge($this->attributes, $args[0]);
-            return $this;
-        } elseif (isset($args[0]) && isset($args[1])) {
-            $this->attributes[$args[0]] = $args[1];
-            return $this;
-        } elseif (isset($args[0])) {
-            return isset($this->attributes[$args[0]]) ? $this->attributes[$args[0]] : null;
-        }
-
-        return $this->attributes;
-    }
 
     /**
      * Generate URL for link
@@ -162,7 +98,6 @@ class Item
 
         return $this->link->url();
     }
-
 
     /**
      * Prepends text or html to the item
@@ -189,13 +124,13 @@ class Item
     }
 
     /**
-     * Checks if the item has any children
+     * Returns whether the item has any children
      *
      * @return boolean
      */
     public function hasChildren()
     {
-        return count($this->menu->whereParent($this->id)) or false;
+        return (bool) $this->children()->count();
     }
 
     /**
@@ -205,7 +140,19 @@ class Item
      */
     public function children()
     {
-        return $this->menu->whereParent($this->id);
+        return $this->menu->items->filter(function($item) {
+            return $item->hasParent() && $item->parent->name == $this->name;
+        });
+    }
+
+    /**
+     * Returns whether the item has a parent
+     *
+     * @return bool
+     */
+    public function hasParent()
+    {
+        return (bool)$this->parent;
     }
 
     /**
@@ -224,7 +171,7 @@ class Item
     public function activate()
     {
         if ($this->menu->config->activeElement == 'item') {
-            $this->active();
+            $this->setToActive();
         } else {
             $this->link->activate();
         }
@@ -239,26 +186,15 @@ class Item
     }
 
     /**
-     * Make the item active
+     * Sets the url pattern that if matched, sets the link to active
      *
-     * @return Item
+     * @param string $pattern   Eg.: 'articles/*
+     *
+     * @return $this
      */
-    public function active($pattern = null)
+    public function activateOnUrl($pattern)
     {
-        if ( ! is_null($pattern)) {
-            $pattern = ltrim(preg_replace('/\/\*/', '(/.*)?', $pattern), '/');
-            if (preg_match("@^{$pattern}\z@", \Request::path())) {
-                $this->activate();
-            }
-            return $this;
-        }
-
-        $this->attributes['class'] = Menu::formatGroupClass(
-            ['class' => $this->menu->config->activeClass],
-            $this->attributes
-        );
-
-        $this->isActive = true;
+        $this->activeUrlPattern = $pattern;
 
         return $this;
     }
@@ -266,17 +202,17 @@ class Item
     /**
      * Set or get items's meta data
      *
-     * @return string|Item|array
+     * @param array $args
+     *
+     * @return mixed
      */
-    public function data()
+    public function data(...$args)
     {
-        $args = func_get_args();
-
         if (isset($args[0]) && is_array($args[0])) {
             $this->data = array_merge($this->data, array_change_key_case($args[0]));
 
             // Cascade data to item's children if cascade_data option is enabled
-            if ($this->menu->conf['cascade_data']) {
+            if ($this->menu->config->cascadeData) {
                 $this->cascade_data($args);
             }
             return $this;
@@ -293,6 +229,18 @@ class Item
         }
 
         return $this->data;
+    }
+
+    /**
+     * Returns whether metadata with given key exists
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function hasData($key)
+    {
+        return array_key_exists($key, $this->data);
     }
 
     /**
@@ -324,11 +272,12 @@ class Item
      */
     public function hasProperty($property)
     {
-        if (property_exists($this, $property) || ! is_null($this->data($property))) {
-            return true;
-        }
-
-        return false;
+        return
+            property_exists($this, $property)
+            ||
+            $this->hasAttribute($property)
+            ||
+            $this->hasData($property);
     }
 
 
@@ -346,6 +295,37 @@ class Item
         }
 
         return $this->data($prop);
+    }
+
+    /**
+     * Make the item active
+     *
+     * @return Item
+     */
+    protected function setToActive()
+    {
+        $this->attributes['class'] = Utils::addHtmlClass(
+            array_get($this->attributes, 'class'),
+            $this->menu->config->activeClass
+        );
+        $this->isActive = true;
+
+        return $this;
+    }
+
+    /**
+     * Returns whether the current URL matches this link's URL
+     *
+     * @return bool
+     */
+    protected function currentUrlMatches()
+    {
+        if ($this->activeUrlPattern) {
+            $pattern = ltrim(preg_replace('/\/\*/', '(/.*)?', $this->activeUrlPattern), '/');
+            return preg_match("@^{$pattern}\z@", Request::path());
+        }
+
+        return $this->url() == Request::url();
     }
 
 }

@@ -100,13 +100,13 @@ You can define the menu definitions inside a [middleware](http://laravel.com/doc
 
 ```php
 $sidebar = Menu::create('sidebar');
-$sidebar->add('Home',  '/');
-$sidebar->add('About', 'about');
+$sidebar->addItem('Home',  '/');
+$sidebar->addItem('About', 'about');
 
 // Alternatively:
 Menu::make('sidebar', function($menu){
-  $menu->add('Home',  '/');
-  $menu->add('About', 'about');  
+  $menu->addItem('Home',  '/');
+  $menu->addItem('About', 'about');  
 });
 ```
 
@@ -137,20 +137,20 @@ In a blade view:
 $navbar = Menu::create('navbar');
 
 // Simple link; to '/' via the URL helper
-$navbar->add('Home', '/');
+$navbar->addItem('Home', '/');
 
 // Named route
-$navbar->add('Clients', ['route' => 'client.index']);
+$navbar->addItem('Clients', ['route' => 'client.index']);
 // Named route with parameter
-$navbar->add('My Profile', ['route' => ['user.show', 'id' => Auth::user()->id]]);
+$navbar->addItem('My Profile', ['route' => ['user.show', 'id' => Auth::user()->id]]);
 
 // Refer to an action
-$navbar->add('Projects', ['action' => 'ProjectController@index']);
+$navbar->addItem('Projects', ['action' => 'ProjectController@index']);
 // Action with parameter
-$navbar->add('Issue 7', ['action' => ['IssueController@edit', 'id' => 7]]);
+$navbar->addItem('Issue 7', ['action' => ['IssueController@edit', 'id' => 7]]);
 ```
 
-The `add()` method receives two parameters, the first one is the item title and the second one is options.
+The `addItem()` method receives two parameters, the first one is the item title and the second one is options.
 
 *options* can be a simple string representing a URL or an associative array of options and HTML attributes which is described below.
 
@@ -185,9 +185,9 @@ This will render your menu like so:
 If you need to serve the route over HTTPS, call `secure()` on the item's `link` attribute or alternatively add key `secure` to the options array and set it to `true`:
 
 ```php
-$menu->add('Members', 'members')->link->secure();
+$menu->addItem('Members', 'members')->link->secure();
 
-$menu->add('Members', array('url' => 'members', 'secure' => true));
+$menu->addItem('Members', array('url' => 'members', 'secure' => true));
 ```
 
 The output as `<ul>` would be:
@@ -211,20 +211,20 @@ Menu::make('MyNavBar', function($menu){
 
   //...
   
-  $menu->add('About',    array('route'  => 'page.about'));
+  $menu->addItem('About',    array('route'  => 'page.about'));
   
   // these items will go under Item 'About'
   
-  // refer to about as a property of $menu object then call `add()` on it
-  $menu->about->add('Who We are', 'who-we-are');
+  // refer to about as a property of $menu object then call `addItem()` on it
+  $menu->about->addItem('Who We are', 'who-we-are');
 
   // or
   
-  $menu->get('about')->add('What We Do', 'what-we-do');
+  $menu->get('about')->addItem('What We Do', 'what-we-do');
   
   // or
   
-  $menu->item('about')->add('Our Goals', 'our-goals');
+  $menu->item('about')->addItem('Our Goals', 'our-goals');
   
   //...
 
@@ -239,10 +239,10 @@ You can also chain the item definitions and go as deep as you wish:
 
   // ...
   
-  $menu->add('About',    array('route'  => 'page.about'))
-		     ->add('Level2', 'link address')
-		          ->add('level3', 'Link address')
-		               ->add('level4', 'Link address');
+  $menu->addItem('About',    array('route'  => 'page.about'))
+		     ->addItem('Level2', 'link address')
+		          ->addItem('level3', 'Link address')
+		               ->addItem('level4', 'Link address');
         
   // ...      
 ?>
@@ -253,8 +253,8 @@ It is possible to add sub items directly using `parent` attribute:
 ```php  
 <?php
 	//...
-	$menu->add('About',    array('route'  => 'page.about'));
-	$menu->add('Level2', array('url' => 'Link address', 'parent' => $menu->about->id));
+	$menu->addItem('About',    array('route'  => 'page.about'));
+	$menu->addItem('Level2', array('url' => 'Link address', 'parent' => $menu->about->id));
 	//...
 ?>
 ```  
@@ -266,7 +266,7 @@ When you add a new item, a unique ID is automatically assigned to the item. Howe
 ```php
 <?php
 	// ...
-	$menu->add('About', array('route' => 'page.about'))
+	$menu->addItem('About', array('route' => 'page.about'))
 	     ->id('74398247329487')
 	// ...
 ```
@@ -276,7 +276,7 @@ Alternatively, you can pass the ID as an element of the options array when addin
 ```php
 <?php
 	// ...
-	$menu->add('About', array('route' => 'page.about', 'id' => 74398247329487));
+	$menu->addItem('About', array('route' => 'page.about', 'id' => 74398247329487));
 	// ...
 ```
 
@@ -288,7 +288,7 @@ However there are times when you have to explicitly define your menu items owing
 ```php
 <?php
 	// ...
-	$menu->add('About', array('route' => 'page.about'))
+	$menu->addItem('About', array('route' => 'page.about'))
 	     ->nickname('about_menu_nickname');
 	     
 	// And use it like you normally would
@@ -302,7 +302,7 @@ Alternatively, you can pass the nickname as an element of the options array:
 ```php
 <?php
 	// ...
-	$menu->add('About', array('route' => 'page.about', 'nickname' => 'about_menu_nickname'));
+	$menu->addItem('About', array('route' => 'page.about', 'nickname' => 'about_menu_nickname'));
 	
 	// And use it like you normally would
 	$menu->item('about_menu_nickname');    
@@ -342,7 +342,7 @@ As an example, let's insert a divider after `About us` item after we've defined 
 <?php
     // ...
 	
-	$menu->add('About us', 'about-us')
+	$menu->addItem('About us', 'about-us')
 	
 	$menu->aboutUs->divide();
 	
@@ -363,9 +363,9 @@ If you're not comfortable with the above method you can store the item's object 
 ```php
 <?php
 // ...
-$about = $menu->add('About', 'about');
-$about->add('Who We Are', 'who-we-are');
-$about->add('What We Do', 'what-we-do');
+$about = $menu->addItem('About', 'about');
+$about->addItem('Who We Are', 'who-we-are');
+$about->addItem('What We Do', 'what-we-do');
 // ...
 ```
 
@@ -492,10 +492,10 @@ Or to get item's with a specific meta data:
 ```php
 <?php
 	// ...
-	$menu->add('Home',     '#')->data('color', 'red');
-	$menu->add('About',    '#')->data('color', 'blue');
-	$menu->add('Services', '#')->data('color', 'red');
-	$menu->add('Contact',  '#')->data('color', 'green');
+	$menu->addItem('Home',     '#')->data('color', 'red');
+	$menu->addItem('About',    '#')->data('color', 'blue');
+	$menu->addItem('Services', '#')->data('color', 'red');
+	$menu->addItem('Contact',  '#')->data('color', 'green');
 	// ...
 	
 	// Fetch all the items with color set to red:
@@ -562,10 +562,10 @@ Since all menu items would be rendered as HTML entities like list items or divs,
 Menu::make('MyNavBar', function($menu){
 
   // As you see, you need to pass the second parameter as an associative array:
-  $menu->add('Home',     array('route'  => 'home.page',  'class' => 'navbar navbar-home', 'id' => 'home'));
-  $menu->add('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
-  $menu->add('services', array('action' => 'ServicesController@index'));
-  $menu->add('Contact',  'contact');
+  $menu->addItem('Home',     array('route'  => 'home.page',  'class' => 'navbar navbar-home', 'id' => 'home'));
+  $menu->addItem('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
+  $menu->addItem('services', array('action' => 'ServicesController@index'));
+  $menu->addItem('Contact',  'contact');
 
 });
 ?>
@@ -592,7 +592,7 @@ You can also pass an associative array of attributes if you need to add a group 
 ```php
 <?php
 	//...
-	$menu->add('About', array('url' => 'about', 'class' => 'about-item'));
+	$menu->addItem('About', array('url' => 'about', 'class' => 'about-item'));
 	
 	echo $menu->about->attr('class');  // output:  about-item
 	
@@ -623,10 +623,10 @@ You can use `attr` on a collection, if you need to target a group of items:
 ```php
 <?php
   // ...
-  $menu->add('About', 'about');
+  $menu->addItem('About', 'about');
   
-  $menu->about->add('Who we are', 'about/whoweare');
-  $menu->about->add('What we do', 'about/whatwedo');
+  $menu->about->addItem('Who we are', 'about/whoweare');
+  $menu->about->addItem('What we do', 'about/whatwedo');
   
   // add a class to children of About
   $menu->about->children()->attr('class', 'about-item');
@@ -648,7 +648,7 @@ Menu::make('MyNavBar', function($menu){
 
  //  ...
   
-  $about = $menu->add('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
+  $about = $menu->addItem('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
   
   $about->link->attr(array('class' => 'dropdown-toggle', 'data-toggle' => 'dropdown'));
   
@@ -665,7 +665,7 @@ If you don't want to use the routing feature of `laravel-menu` or you don't want
 ```
 <?php
 // ...
-$menu->add('About')->link->href('#');
+$menu->addItem('About')->link->href('#');
 // ...
 ?>
 ```
@@ -677,7 +677,7 @@ You can mark an item as activated using `activate()` on that item:
 ```php
 <?php
 	// ...
-	$menu->add('Home', '#')->active();
+	$menu->addItem('Home', '#')->active();
 	// ...
 	
 	/* Output
@@ -694,7 +694,7 @@ You can also add class `active` to the anchor element instead of the wrapping el
 ```php
 <?php
 	// ...
-	$menu->add('Home', '#')->link->active();
+	$menu->addItem('Home', '#')->link->active();
 	// ...
 	
 	/* Output
@@ -731,7 +731,7 @@ You might encounter situations where your app is in a sub directory instead of t
 ```php
 <?php
 // ...
-$menu->add('Articles', 'articles')->active('this-is-another-url/*');
+$menu->addItem('Articles', 'articles')->active('this-is-another-url/*');
 // ...
 ```
 
@@ -744,7 +744,7 @@ You can insert a separator after each item using `divide()` method:
 ```php
 <?php
 	//...
-	$menu->add('Separated Item', 'item-url')->divide()
+	$menu->addItem('Separated Item', 'item-url')->divide()
 	
 	// You can also use it this way:
 	
@@ -778,7 +778,7 @@ You can insert a separator after each item using `divide()` method:
 ```php
 <?php
 	//...
-	$menu->add('Separated Item', 'item-url')->divide( array('class' => 'my-divider') );
+	$menu->addItem('Separated Item', 'item-url')->divide( array('class' => 'my-divider') );
 	//...
 	
 	/*
@@ -808,7 +808,7 @@ Menu::make('MyNavBar', function($menu){
 
   // ...
   
-  $about = $menu->add('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
+  $about = $menu->addItem('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
   
   $menu->about->attr(array('class' => 'dropdown-toggle', 'data-toggle' => 'dropdown'))
               ->append(' <b class="caret"></b>')
@@ -846,7 +846,7 @@ To insert items as plain text instead of hyper-links you can use `raw()`:
     // ...
     $menu->raw('Item Title', array('class' => 'some-class'));  
     
-    $menu->add('About', 'about');
+    $menu->addItem('About', 'about');
     $menu->About->raw('Another Plain Text Item')
     // ...
     
@@ -878,15 +878,15 @@ Sometimes you may need to share attributes between a group of items. Instead of 
 <?php
 Menu::make('MyNavBar', function($menu){
 
-  $menu->add('Home',     array('route'  => 'home.page', 'class' => 'navbar navbar-home', 'id' => 'home'));
+  $menu->addItem('Home',     array('route'  => 'home.page', 'class' => 'navbar navbar-home', 'id' => 'home'));
   
   $menu->group(array('style' => 'padding: 0', 'data-role' => 'navigation') function($m){
     
-        $m->add('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
-        $m->add('services', array('action' => 'ServicesController@index'));
+        $m->addItem('About',    array('route'  => 'page.about', 'class' => 'navbar navbar-about dropdown'));
+        $m->addItem('services', array('action' => 'ServicesController@index'));
   }
   
-  $menu->add('Contact',  'contact');
+  $menu->addItem('Contact',  'contact');
 
 });
 ?>
@@ -913,18 +913,18 @@ Just like Laravel route prefixing feature, a group of menu items may be prefixed
 <?php
 Menu::make('MyNavBar', function($menu){
 
-  $menu->add('Home',     array('route'  => 'home.page', 'class' => 'navbar navbar-home', 'id' => 'home'));
+  $menu->addItem('Home',     array('route'  => 'home.page', 'class' => 'navbar navbar-home', 'id' => 'home'));
   
-  $menu->add('About', array('url'  => 'about', 'class' => 'navbar navbar-about dropdown'));  // URL: /about 
+  $menu->addItem('About', array('url'  => 'about', 'class' => 'navbar navbar-about dropdown'));  // URL: /about 
   
   $menu->group(array('prefix' => 'about'), function($m){
   
-  	$about->add('Who we are?', 'who-we-are');   // URL: about/who-we-are
-  	$about->add('What we do?', 'what-we-do');   // URL: about/what-we-do
+  	$about->addItem('Who we are?', 'who-we-are');   // URL: about/who-we-are
+  	$about->addItem('What we do?', 'what-we-do');   // URL: about/what-we-do
   	
   });
   
-  $menu->add('Contact',  'contact');
+  $menu->addItem('Contact',  'contact');
 
 });
 ?>
@@ -960,13 +960,13 @@ Menu::make('MyNavBar', function($menu){
 	
 	$menu->group(array('prefix' => 'pages', 'data-info' => 'test'), function($m){
 		
-		$m->add('About', 'about');
+		$m->addItem('About', 'about');
 		
 		$m->group(array('prefix' => 'about', 'data-role' => 'navigation'), function($a){
 		
-			$a->add('Who we are', 'who-we-are?');
-			$a->add('What we do?', 'what-we-do');
-			$a->add('Our Goals', 'our-goals');
+			$a->addItem('Who we are', 'who-we-are?');
+			$a->addItem('What we do?', 'what-we-do');
+			$a->addItem('Our Goals', 'our-goals');
 		});
 	});
 	
@@ -1007,7 +1007,7 @@ Menu::make('MyNavBar', function($menu){
 
   // ...
   
-  $menu->add('Users', array('route'  => 'admin.users'))
+  $menu->addItem('Users', array('route'  => 'admin.users'))
        ->data('permission', 'manage_users');
 
 });
@@ -1021,7 +1021,7 @@ You can also access a data as if it's a property:
 	
 	//...
 	
-	$menu->add('Users', '#')->data('placement', 12);
+	$menu->addItem('Users', '#')->data('placement', 12);
 	
 	// you can refer to placement as if it's a public property of the item object
 	echo $menu->users->placement;    // Output : 12
@@ -1037,10 +1037,10 @@ You can use `data` on a collection, if you need to target a group of items:
 ```php
 <?php
   // ...
-  $menu->add('Users', 'users');
+  $menu->addItem('Users', 'users');
   
-  $menu->users->add('New User', 'users/new');
-  $menu->users->add('Uses', 'users');
+  $menu->users->addItem('New User', 'users/new');
+  $menu->users->addItem('Uses', 'users');
   
   // add a meta data to children of Users
   $menu->users->children()->data('anything', 'value');
@@ -1066,7 +1066,7 @@ Menu::make('MyNavBar', function($menu){
 
   // ...
   
-  $menu->add('Users', array('route'  => 'admin.users'))
+  $menu->addItem('Users', array('route'  => 'admin.users'))
        ->data('permission', 'manage_users');
 
 })->filter(function($item){
@@ -1093,11 +1093,11 @@ To sort the items based on a property and or meta data:
 <?php
 Menu::make('main', function($m){
 
-	$m->add('About', '#')     ->data('order', 2);
-	$m->add('Home', '#')      ->data('order', 1);
-	$m->add('Services', '#')  ->data('order', 3);
-	$m->add('Contact', '#')   ->data('order', 5);
-	$m->add('Portfolio', '#') ->data('order', 4);
+	$m->addItem('About', '#')     ->data('order', 2);
+	$m->addItem('Home', '#')      ->data('order', 1);
+	$m->addItem('Services', '#')  ->data('order', 3);
+	$m->addItem('Contact', '#')   ->data('order', 5);
+	$m->addItem('Portfolio', '#') ->data('order', 4);
 
 })->sortBy('order');		
 ?>
@@ -1114,11 +1114,11 @@ To sort the items based on `Id` in descending order:
 <?php
 Menu::make('main', function($m){
 
-	$m->add('About');
-	$m->add('Home');
-	$m->add('Services');
-	$m->add('Contact');
-	$m->add('Portfolio');
+	$m->addItem('About');
+	$m->addItem('Home');
+	$m->addItem('Services');
+	$m->addItem('Contact');
+	$m->addItem('Portfolio');
 
 })->sortBy('id', 'desc');		
 ?>
@@ -1131,11 +1131,11 @@ Sorting the items by passing a closure:
 <?php
 Menu::make('main', function($m){
 
-	$m->add('About')     ->data('order', 2);
-	$m->add('Home')      ->data('order', 1);
-	$m->add('Services')  ->data('order', 3);
-	$m->add('Contact')   ->data('order', 5);
-	$m->add('Portfolio') ->data('order', 4);
+	$m->addItem('About')     ->data('order', 2);
+	$m->addItem('Home')      ->data('order', 1);
+	$m->addItem('Services')  ->data('order', 3);
+	$m->addItem('Contact')   ->data('order', 5);
+	$m->addItem('Portfolio') ->data('order', 4);
 
 })->sortBy(function($items) {
 	// Your sorting algorithm here...
@@ -1300,15 +1300,15 @@ In our `app/Http/routes.php`:
 <?php
 Menu::make('MyNavBar', function($menu){
   
-  $menu->add('Home');
+  $menu->addItem('Home');
   
-   $menu->add('About',    array('route'  => 'page.about'));
+   $menu->addItem('About',    array('route'  => 'page.about'));
    
-   $menu->about->add('Who are we?', 'who-we-are');
-   $menu->about->add('What we do?', 'what-we-do');
+   $menu->about->addItem('Who are we?', 'who-we-are');
+   $menu->about->addItem('What we do?', 'what-we-do');
 
-  $menu->add('services', 'services');
-  $menu->add('Contact',  'contact');
+  $menu->addItem('services', 'services');
+  $menu->addItem('Contact',  'contact');
   
 });
 ?>
@@ -1379,7 +1379,7 @@ Suppose the item has also several attributes dynamically defined when being adde
 ```php
 <?php
 // ...
-$menu->add('Dropdown', array('class' => 'item item-1', 'id' => 'my-item'));
+$menu->addItem('Dropdown', array('class' => 'item item-1', 'id' => 'my-item'));
 // ...
 ```
 
