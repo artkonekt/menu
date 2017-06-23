@@ -52,6 +52,13 @@ class ItemCollectionTest extends TestCase
         $this->menu->addItem('about', 'About Duplicate');
     }
 
+    public function testRoots()
+    {
+        $this->assertCount(4, $this->menu->items->roots());
+        $this->menu->items->remove('home');
+        $this->assertCount(3, $this->menu->items->roots());
+    }
+
     protected function setUp()
     {
         parent::setUp();

@@ -48,8 +48,11 @@ class Link
      */
     public function activate()
     {
-        $this->attributes['class'] = Utils::addHtmlClass(array_get($this->attributes, 'class', ''), $this->activeClass);
-        $this->isActive            = true;
+        $this->isActive = true;
+        $this->attributes['class'] = Utils::addHtmlClass(
+            array_get($this->attributes, 'class', ''),
+            $this->activeClass
+        );
 
         return $this;
     }

@@ -71,4 +71,22 @@ class UtilsTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider attrsToHtmlProvider
+     */
+    public function testAttrsToHtml($attrs, $expectedHtml)
+    {
+        $this->assertEquals($expectedHtml, Utils::attrsToHtml($attrs));
+    }
+
+    public function attrsToHtmlProvider()
+    {
+        return [
+            [['disabled', 'readonly'], ' disabled readonly'],
+            [['disabled' => 'disabled', 'readonly'], ' disabled="disabled" readonly'],
+            [['disabled' => 'disabled', 'readonly' => 1], ' disabled="disabled" readonly="1"'],
+            [['class' => 'btn btn-primary', 'disabled'], ' class="btn btn-primary" disabled']
+        ];
+    }
+
 }

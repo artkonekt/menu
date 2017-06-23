@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the Menu Collection class.
+ * Contains the Menu Item Collection class.
  *
  * @author      Lavary
  * @author      Attila Fulop
@@ -38,22 +38,33 @@ class ItemCollection extends Collection
     }
 
     /**
+     * Remove an item from the list
+     *
+     * @param Item|string $item The item instance or name
+     *
+     * @return bool Returns true if the element has been removed, false otherwise
+     */
+    public function remove($item)
+    {
+        $key = $item instanceof Item ? $item->name : $item;
+
+        if ($this->has($key)) {
+            $this->forget($key);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Add attributes to a collection of items
      *
-     * @param  mixed
-     *
-     * @return \Konekt\Menu\ItemCollection
+     * @return ItemCollection
      */
-    public function attr()
+    public function attr(...$args)
     {
-        $args = func_get_args();
-
         $this->each(function ($item) use ($args) {
-            if (count($args) >= 2) {
-                $item->attr($args[0], $args[1]);
-            } else {
-                $item->attr($args[0]);
-            }
+            $item->attr(...$args);
         });
 
         return $this;
@@ -62,20 +73,14 @@ class ItemCollection extends Collection
     /**
      * Add meta data to a collection of items
      *
-     * @param  mixed
+     * @param array $args
      *
-     * @return \Konekt\Menu\ItemCollection
+     * @return ItemCollection
      */
-    public function data()
+    public function data(...$args)
     {
-        $args = func_get_args();
-
         $this->each(function ($item) use ($args) {
-            if (count($args) >= 2) {
-                $item->data($args[0], $args[1]);
-            } else {
-                $item->data($args[0]);
-            }
+            $item->data(...$args);
         });
 
         return $this;
@@ -86,9 +91,9 @@ class ItemCollection extends Collection
      *
      * @param  string
      *
-     * @return \Konekt\Menu\ItemCollection
+     * @return ItemCollection
      */
-    public function append($html)
+    public function appendHtml($html)
     {
         $this->each(function ($item) use ($html) {
             $item->title .= $html;
@@ -100,17 +105,29 @@ class ItemCollection extends Collection
     /**
      * Prepends text or HTML to a collection of items
      *
-     * @param  string
+     * @param string $html
      *
-     * @return \Konekt\Menu\ItemCollection
+     * @return ItemCollection
      */
-    public function prepend($html, $key = null)
+    public function prependHtml($html)
     {
         $this->each(function ($item) use ($html) {
             $item->title = $html . $item->title;
         });
 
         return $this;
+    }
+
+    /**
+     * Returns items with no parent
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function roots()
+    {
+        return $this->filter(function($item) {
+            return !$item->hasParent();
+        });
     }
 
     /**

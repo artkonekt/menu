@@ -51,4 +51,28 @@ class Utils
         return parse_url($url, PHP_URL_HOST) ? true : false;
     }
 
+    /**
+     * Converts attributes to html string.
+     * Eg.: ['disabled', ['src' => 'img.png']] -> ' disabled src="img.png"'
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    public static function attrsToHtml(array $attributes)
+    {
+        $attrs = [];
+
+        foreach ($attributes as $key => $value) {
+            $element = is_numeric($key) ?
+                (string)$value :
+                (is_null($value) ? (string)$key : $key . '="' . e($value) . '"');
+            if (!empty($element)) {
+                $attrs[] = $element;
+            }
+        }
+
+        return count($attrs) ? ' ' . implode(' ', $attrs) : '';
+    }
+
 }

@@ -12,11 +12,12 @@
 namespace Konekt\Menu;
 
 use Konekt\Menu\Traits\HasAttributes;
+use Konekt\Menu\Traits\Renderable;
 use Request;
 
 class Item
 {
-    use HasAttributes;
+    use HasAttributes, Renderable;
 
     /** @var string The name (or id) of the menu item */
     public $name;
@@ -30,6 +31,9 @@ class Item
     /** @var bool   Flag for active state */
     public $isActive = false;
 
+    /** @var Link|null */
+    public $link;
+
     /** @var array  Extra information attached to the menu item */
     protected $data = [];
 
@@ -39,7 +43,7 @@ class Item
     /** @var string URL pattern to match (if no exact match) */
     private $activeUrlPattern;
 
-    private $reserved = ['route', 'action', 'url', 'prefix', 'parent'];
+    private $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'renderer'];
 
     /**
      * Class constructor
@@ -56,15 +60,12 @@ class Item
         $this->title      = $title;
         $this->attributes = array_except($options, $this->reserved);
         $this->parent     = array_get($options, 'parent', null);
-
+        $this->renderer   = array_get($options, 'renderer', null);
 
         $path       = array_only($options, array('url', 'route', 'action'));
         $this->link = new Link($path, $this->menu->config->activeClass);
 
-        // Activate the item if items's url matches the request URI
-        if ($this->menu->config->autoActivate && $this->currentUrlMatches()) {
-            $this->activate();
-        }
+        $this->checkActivation();
     }
 
     /**
@@ -83,7 +84,6 @@ class Item
 
         return $this->menu->addItem($name, $title, $options);
     }
-
 
     /**
      * Generate URL for link
@@ -156,16 +156,6 @@ class Item
     }
 
     /**
-     * Returns all childeren of the item
-     *
-     * @return \Konekt\Menu\ItemCollection
-     */
-    public function all()
-    {
-        return $this->menu->whereParent($this->id, true);
-    }
-
-    /**
      * Sets the item as active
      */
     public function activate()
@@ -192,9 +182,10 @@ class Item
      *
      * @return $this
      */
-    public function activateOnUrl($pattern)
+    public function activateOnUrls($pattern)
     {
         $this->activeUrlPattern = $pattern;
+        $this->checkActivation();
 
         return $this;
     }
@@ -213,15 +204,15 @@ class Item
 
             // Cascade data to item's children if cascade_data option is enabled
             if ($this->menu->config->cascadeData) {
-                $this->cascade_data($args);
+                $this->cascadeData(...$args);
             }
             return $this;
         } elseif (isset($args[0]) && isset($args[1])) {
             $this->data[strtolower($args[0])] = $args[1];
 
             // Cascade data to item's children if cascade_data option is enabled
-            if ($this->menu->conf['cascade_data']) {
-                $this->cascade_data($args);
+            if ($this->menu->config->cascadeData) {
+                $this->cascadeData(...$args);
             }
             return $this;
         } elseif (isset($args[0])) {
@@ -244,22 +235,24 @@ class Item
     }
 
     /**
-     * Cascade data to children
-     *
-     * @param  array $args
+     * Returns whether the item has a link
      *
      * @return bool
      */
-    public function cascade_data($args = array())
+    public function hasLink()
     {
-        if ( ! $this->hasChildren()) {
-            return false;
-        }
+        return (bool)$this->link;
+    }
 
-        if (count($args) >= 2) {
-            $this->children()->data($args[0], $args[1]);
-        } else {
-            $this->children()->data($args[0]);
+    /**
+     * Cascade data to children
+     *
+     * @param  array $args
+     */
+    public function cascadeData(...$args)
+    {
+        if ($this->hasChildren()) {
+            $this->children()->data(...$args);
         }
     }
 
@@ -280,7 +273,6 @@ class Item
             $this->hasData($property);
     }
 
-
     /**
      * Search in meta data if a property doesn't exist otherwise return the property
      *
@@ -295,6 +287,16 @@ class Item
         }
 
         return $this->data($prop);
+    }
+
+    /**
+     * Activate the item if it's enabled in menu config and item's url matches the request URI
+     */
+    protected function checkActivation()
+    {
+        if ($this->menu->config->autoActivate && $this->currentUrlMatches()) {
+            $this->activate();
+        }
     }
 
     /**
@@ -320,12 +322,16 @@ class Item
      */
     protected function currentUrlMatches()
     {
-        if ($this->activeUrlPattern) {
+        if ($this->url() == Request::url()) { // If URLs are equal, always return true
+            return true;
+        }
+
+        if ($this->activeUrlPattern) { // If pattern was set, see if it matches
             $pattern = ltrim(preg_replace('/\/\*/', '(/.*)?', $this->activeUrlPattern), '/');
             return preg_match("@^{$pattern}\z@", Request::path());
         }
 
-        return $this->url() == Request::url();
+        return false; // No match
     }
 
 }

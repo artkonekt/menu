@@ -13,6 +13,11 @@ namespace Konekt\Menu;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
+use Konekt\Menu\Renderers\DivItemRenderer;
+use Konekt\Menu\Renderers\DivMenuRenderer;
+use Konekt\Menu\Renderers\LiItemRenderer;
+use Konekt\Menu\Renderers\OlMenuRenderer;
+use Konekt\Menu\Renderers\UlMenuRenderer;
 
 class MenuServiceProvider extends ServiceProvider
 {
@@ -37,6 +42,12 @@ class MenuServiceProvider extends ServiceProvider
         $this->app->singleton('menu', function ($app) {
             return new Repository();
         });
+
+        $this->app->singleton('konekt.menu.renderer.menu.ul', UlMenuRenderer::class);
+        $this->app->singleton('konekt.menu.renderer.menu.ol', OlMenuRenderer::class);
+        $this->app->singleton('konekt.menu.renderer.menu.div', DivMenuRenderer::class);
+        $this->app->singleton('konekt.menu.renderer.item.li', LiItemRenderer::class);
+        $this->app->singleton('konekt.menu.renderer.item.div', DivItemRenderer::class);
 
         $this->registerBladeExtensions();
     }

@@ -13,6 +13,8 @@
 namespace Konekt\Menu\Traits;
 
 
+use Konekt\Menu\Utils;
+
 trait HasAttributes
 {
     /** @var array */
@@ -52,6 +54,16 @@ trait HasAttributes
     public function hasAttribute($name)
     {
         return array_key_exists($name, $this->attributes);
+    }
+
+    /**
+     * Returns the attributes as html string
+     *
+     * @return string
+     */
+    public function attributesAsHtml()
+    {
+        return Utils::attrsToHtml($this->attributes);
     }
 
 }
