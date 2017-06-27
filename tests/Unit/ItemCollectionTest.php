@@ -59,6 +59,24 @@ class ItemCollectionTest extends TestCase
         $this->assertCount(3, $this->menu->items->roots());
     }
 
+    public function testHaveChild()
+    {
+        $this->assertCount(1, $this->menu->items->haveChild());
+
+        $this->menu->contact->addSubItem('a', 'A', '/a');
+
+        $this->assertCount(2, $this->menu->items->haveChild());
+    }
+
+    public function testHaveParent()
+    {
+        $this->assertCount(2, $this->menu->items->haveParent());
+
+        $this->menu->contact->addSubItem('b', 'B', '/b');
+
+        $this->assertCount(3, $this->menu->items->haveParent());
+    }
+
     protected function setUp()
     {
         parent::setUp();

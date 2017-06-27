@@ -130,6 +130,33 @@ class ItemCollection extends Collection
         });
     }
 
+
+    /**
+     * Returns the items who have children
+     *
+     * @return static
+     */
+    public function haveChild()
+    {
+        return $this->filter(function ($item) {
+            return $item->hasChildren();
+        });
+
+    }
+
+    /**
+     * Returns the items who have parent
+     *
+     * @return static
+     */
+    public function haveParent()
+    {
+        return $this->filter(function ($item) {
+            return $item->hasParent();
+        });
+
+    }
+
     /**
      * Search the items based on an attribute
      *

@@ -287,6 +287,10 @@ class Item
             return $this->$prop;
         }
 
+        if ($this->children()->has($prop)) {
+            return $this->children()->get($prop);
+        }
+
         return $this->data($prop);
     }
 
