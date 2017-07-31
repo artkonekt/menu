@@ -64,7 +64,9 @@ class Item
         $this->renderer   = array_get($options, 'renderer', null);
 
         $path       = array_only($options, array('url', 'route', 'action'));
-        $this->link = new Link($path, $this->menu->config->activeClass);
+        if (!empty($path)) {
+            $this->link = new Link($path, $this->menu->config->activeClass);
+        }
 
         $this->checkActivation();
     }
@@ -164,7 +166,9 @@ class Item
         if ($this->menu->config->activeElement == 'item') {
             $this->setToActive();
         } else {
-            $this->link->activate();
+            if ($this->link) {
+                $this->link->activate();
+            }
         }
 
         // If parent activation is enabled:
