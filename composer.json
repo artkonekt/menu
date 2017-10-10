@@ -47,7 +47,10 @@
         "laravel": {
             "providers": [
                 "Konekt\\Menu\\MenuServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Menu": "Konekt\\Menu\\Facades\\Menu"
+            }
         }
     }
 }
