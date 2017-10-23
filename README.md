@@ -2,7 +2,7 @@
 
 > This is a rework of [Lavary Menu](https://github.com/lavary/laravel-menu)
 
-[![Travis](https://img.shields.io/travis/artkonekt/vanilo.svg?style=flat-square)](https://travis-ci.org/artkonekt/vanilo)
+[![Travis](https://img.shields.io/travis/artkonekt/menu.svg?style=flat-square)](https://travis-ci.org/artkonekt/menu)
 [![Stable packagist version](https://img.shields.io/packagist/v/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
 [![Packagist downloads](https://img.shields.io/packagist/dt/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
