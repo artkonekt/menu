@@ -2,10 +2,10 @@
 
 > This is a rework of [Lavary Menu](https://github.com/lavary/laravel-menu)
 
-[![Latest Stable Version](https://poser.pugx.org/konekt/menu/version.png)](https://packagist.org/packages/konekt/menu)
-[![Latest Unstable Version](https://poser.pugx.org/konekt/menu/v/unstable.svg)](https://packagist.org/packages/konekt/menu)
-[![Total Downloads](https://poser.pugx.org/konekt/menu/downloads.png)](https://packagist.org/packages/konekt/menu)
-[![License](https://poser.pugx.org/konekt/menu/license.svg)](https://packagist.org/packages/konekt/menu)
+[![Travis](https://img.shields.io/travis/artkonekt/vanilo.svg?style=flat-square)](https://travis-ci.org/artkonekt/vanilo)
+[![Stable packagist version](https://img.shields.io/packagist/v/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
+[![Packagist downloads](https://img.shields.io/packagist/dt/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
+[![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
 
 A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
