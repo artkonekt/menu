@@ -77,6 +77,32 @@ class ItemCollectionTest extends TestCase
         $this->assertCount(3, $this->menu->items->haveParent());
     }
 
+    public function testItemsCanBeRemoved()
+    {
+        $originalCount = $this->menu->items->count();
+        $this->assertTrue($this->menu->items->has('home'));
+
+        $this->menu->removeItem('home');
+
+        $this->assertFalse($this->menu->items->has('home'));
+        $this->assertEquals($originalCount - 1, $this->menu->items->count());
+    }
+
+    public function testItemsCanBeRemovedAlongWithChildren()
+    {
+        // Add a sub-sub item so that we can check if it actually removes them all
+        $this->menu->getItem('about-us')->addSubItem('about-us-team', 'About Us - The Team', ['url' => '/about/us/team']);
+        $originalCount = $this->menu->items->count();
+
+        $this->menu->removeItem('about');
+
+        $this->assertFalse($this->menu->items->has('about'));
+        $this->assertFalse($this->menu->items->has('about-us'));
+        $this->assertFalse($this->menu->items->has('about-our-product'));
+
+        $this->assertEquals($originalCount - 4, $this->menu->items->count());
+    }
+
     protected function setUp()
     {
         parent::setUp();

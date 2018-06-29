@@ -116,17 +116,17 @@ In a blade view:
 $navbar = Menu::create('navbar');
 
 // Simple link; to '/' via the URL helper
-$navbar->addItem('Home', '/');
+$navbar->addItem('home', 'Home', '/');
 
 // Named route
-$navbar->addItem('Clients', ['route' => 'client.index']);
+$navbar->addItem('clients', 'Clients', ['route' => 'client.index']);
 // Named route with parameter
-$navbar->addItem('My Profile', ['route' => ['user.show', 'id' => Auth::user()->id]]);
+$navbar->addItem('my-profile', 'My Profile', ['route' => ['user.show', 'id' => Auth::user()->id]]);
 
 // Refer to an action
-$navbar->addItem('Projects', ['action' => 'ProjectController@index']);
+$navbar->addItem('projects', 'Projects', ['action' => 'ProjectController@index']);
 // Action with parameter
-$navbar->addItem('Issue 7', ['action' => ['IssueController@edit', 'id' => 7]]);
+$navbar->addItem('issue7', 'Issue 7', ['action' => ['IssueController@edit', 'id' => 7]]);
 ```
 
 The `addItem()` method receives 3 parameters:
@@ -135,6 +135,22 @@ The `addItem()` method receives 3 parameters:
  - and options
 
 *options* can be a simple string representing a URL or an associative array of options and HTML attributes which is described below.
+
+### Removing Items
+
+```php
+$menu = Menu::create('main');
+
+$menu->addItem('home', 'Home', '/');
+$menu->addItem('about', 'About', '/about');
+$menu->getItem('about')->addSubItem('about-us', 'About Us', ['url' => '/about/us']);
+
+// This will remove both about and about-us
+$menu->removeItem('about');
+
+// To keep children, set the second parameter `$removeChildren` to false:
+$menu->removeItem('about', false); // about-us will remain
+```
 
 ### Render The Menu
 

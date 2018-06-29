@@ -81,6 +81,27 @@ class Menu
     }
 
     /**
+     * Remove a menu item by name
+     *
+     * @param string $name
+     * @param bool   $removeChildren
+     *
+     * @return bool Returns true if item(s) was/were removed, false if failed
+     */
+    public function removeItem(string $name, $removeChildren = true)
+    {
+        if ($removeChildren) {
+            if ($item = $this->getItem($name)) {
+                $item->children()->each(function ($item) {
+                    $this->removeItem($item->name);
+                });
+            }
+        }
+
+        return $this->items->remove($name);
+    }
+
+    /**
      * Returns menu item by name
      *
      * @return \Konekt\Menu\Item
