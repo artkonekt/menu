@@ -9,9 +9,7 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests\Feature;
-
 
 use Konekt\Menu\Tests\Feature\Renderer\BulmaMenuRenderer;
 use Konekt\Menu\Tests\TestCase;

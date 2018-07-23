@@ -774,6 +774,8 @@ The callback will receive the user as the first parameter.
 
 ### Checking Authorization
 
+> By default, items without any __allow*__ condition are allowed.
+
 **To check if an item is allowed:**
 
 ```php
