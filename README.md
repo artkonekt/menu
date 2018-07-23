@@ -37,6 +37,7 @@ A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
         - [Render As OL](#render-as-ol)
         - [Render As Div](#render-as-div)
 	- [Custom Renderers](#custom-renderers)
+* [Authorization](#authorization)
 * [Configuration](#configuration)
 
 
@@ -733,6 +734,58 @@ $menu->team->plugins->addSubItem('addNewPlugin', 'Add New Plugin', '/team/plugin
         </li>
     </ul>
 </aside>
+```
+
+## Authorization
+
+Items can be authorized for users in two simple ways:
+
+### 1. Checking Via Actions
+
+Based on [Laravel's built-in](https://laravel.com/docs/5.6/authorization#authorizing-actions-using-policies)
+authorization, you can pass action names (strings) that will be tested against the current user with
+the `can()` method:
+
+```php
+$menu = Menu::create('nav', []);
+$menu->addItem('users', __('Users'), ['route' => 'app.user.index'])
+    ->allowIfUserCan('list users');
+
+$menu->addItem('settings', __('Settings'), ['route' => 'app.settings.index'])
+    ->allowIfUserCan('list settings');
+```
+
+### 2. Checking Via Callbacks
+
+You can also pass callbacks to authorize menu items for users:
+
+```php
+$menu = Menu::create('nav', []);
+$menu->addItem('users', __('Users'), ['route' => 'app.user.index'])
+    ->allowIf(function($user) {
+        return $user->id > 500; // Add your arbitrary condition
+    });
+```
+
+The callback will receive the user as the first parameter.
+
+> You can add multiple `allowIf` and/or `allowIfUserCan` conditions to an item.
+> The item will be allowed if **ALL** the conditions will be met.
+
+### Checking Authorization
+
+**To check if an item is allowed:**
+
+```php
+$menu->users->isAllowed(); // Checks if the item users item is allowed for the current user
+$menu->settings->isAllowed(\App\User::find(501)); // Check if an item is available for a given user
+```
+
+**To get the list of allowed children:**
+
+```php
+$item->childrenAllowed(); // Returns an ItemCollection of the allowed item for the current user
+$item->childrenAllowed(\App\User::find(123)); // Returns the allowed items for the given user
 ```
 
 ## Configuration

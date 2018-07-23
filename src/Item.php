@@ -11,6 +11,8 @@
 
 namespace Konekt\Menu;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Traits\HasAttributes;
 use Konekt\Menu\Traits\Renderable;
@@ -40,6 +42,9 @@ class Item
 
     /** @var Menu   Reference to the menu holding the item */
     protected $menu;
+
+    /** @var array Stack of authorizations */
+    protected $authorizationStack = [];
 
     /** @var string URL pattern to match (if no exact match) */
     private $activeUrlPattern;
@@ -103,6 +108,53 @@ class Item
     }
 
     /**
+     * Adds an authorization condition that will be checked against $user->can($permission)
+     * @see self::isAllowed
+     *
+     * @param string $permission
+     */
+    public function allowIfUserCan(string $permission)
+    {
+        $this->authorizationStack[] = $permission;
+    }
+
+    /**
+     * Adds an authorization condition callback.
+     * The (current) user will be passed as first argument to the callback during isAllowed()
+     * @see self::isAllowed
+     *
+     * @param callable $permissionChecker
+     */
+    public function allowIf(callable $permissionChecker)
+    {
+        $this->authorizationStack[] = $permissionChecker;
+    }
+
+    /**
+     * Returns whether the menu item is allowed for the user
+     *
+     * @param Authenticatable $user In case no user is passed Auth::user() will be used
+     *
+     * @return bool
+     */
+    public function isAllowed(Authenticatable $user = null): bool
+    {
+        $user = $user ?: Auth::user();
+
+        foreach ($this->authorizationStack as $auth) {
+            if (is_callable($auth)) {
+                if (!$auth($user)) {
+                    return false;
+                }
+            } elseif ($user && $user->cannot($auth)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Prepends text or html to the item
      *
      * @return \Konekt\Menu\Item
@@ -137,7 +189,7 @@ class Item
     }
 
     /**
-     * Returns childeren of the item
+     * Returns children of the item
      *
      * @return \Konekt\Menu\ItemCollection
      */
@@ -145,6 +197,18 @@ class Item
     {
         return $this->menu->items->filter(function($item) {
             return $item->hasParent() && $item->parent->name == $this->name;
+        });
+    }
+
+    /**
+     * Returns allowed children of the item
+     *
+     * @return \Konekt\Menu\ItemCollection
+     */
+    public function childrenAllowed(Authenticatable $user = null)
+    {
+        return $this->children()->filter(function ($item) use ($user) {
+            return $item->isAllowed($user);
         });
     }
 
