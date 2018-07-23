@@ -2,6 +2,15 @@
 
 ### Konekt Menu For Laravel
 
+## 1.2
+
+### 1.2.0
+
+###### 2018-07-23
+
+- Added Authorization support
+- Minor composer fixes
+
 ## 1.1
 
 ### 1.1.0
