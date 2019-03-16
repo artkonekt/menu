@@ -48,6 +48,8 @@ A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
 composer require konekt/menu
 ```
 
+> This library supports: **Laravel**: 5.4 - 5.8, **PHP**: 7.1 - 7.3 
+
 Now, append Laravel Menu service provider to `providers` array in `config/app.php`:
 
 > *Note*: On Laravel 5.5 and above this step gets automatically done by composer.
