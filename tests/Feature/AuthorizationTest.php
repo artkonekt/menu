@@ -180,5 +180,4 @@ class AuthorizationTest extends TestCase
             'prefix'   => '',
         ]);
     }
-
 }

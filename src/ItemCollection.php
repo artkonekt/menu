@@ -140,7 +140,7 @@ class ItemCollection extends Collection
      */
     public function roots()
     {
-        return $this->filter(function($item) {
+        return $this->filter(function ($item) {
             return !$item->hasParent();
         });
     }
@@ -156,7 +156,6 @@ class ItemCollection extends Collection
         return $this->filter(function ($item) {
             return $item->hasChildren();
         });
-
     }
 
     /**
@@ -169,7 +168,6 @@ class ItemCollection extends Collection
         return $this->filter(function ($item) {
             return $item->hasParent();
         });
-
     }
 
     /**
@@ -213,5 +211,4 @@ class ItemCollection extends Collection
             return false;
         })->keyBy('name');
     }
-
 }

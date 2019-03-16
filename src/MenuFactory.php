@@ -38,5 +38,4 @@ class MenuFactory
 
         return $menu;
     }
-
 }

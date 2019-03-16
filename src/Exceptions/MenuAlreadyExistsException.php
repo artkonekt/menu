@@ -12,8 +12,6 @@
 
 namespace Konekt\Menu\Exceptions;
 
-
 class MenuAlreadyExistsException extends \Exception
 {
-
 }

@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Contracts;
 
-
 use Konekt\Menu\Menu;
 
 interface MenuRenderer
@@ -25,5 +24,4 @@ interface MenuRenderer
      * @return string
      */
     public function render(Menu $menu);
-
 }

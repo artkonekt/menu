@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Traits;
 
-
 use Konekt\Menu\Utils;
 
 trait HasAttributes
@@ -65,5 +64,4 @@ trait HasAttributes
     {
         return Utils::attrsToHtml($this->attributes);
     }
-
 }

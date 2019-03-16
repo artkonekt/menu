@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Illuminate\Http\Request;
 use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Menu;
@@ -38,9 +37,9 @@ class ItemTest extends TestCase
 
         $this->assertEquals(
             $menu->about,
-            $menu->addItem('our-goals', 'Our Goals',[
+            $menu->addItem('our-goals', 'Our Goals', [
                 'parent' => 'about',
-                'url' => '/our-goals'
+                'url'    => '/our-goals'
             ])->parent
         );
     }
@@ -149,7 +148,5 @@ class ItemTest extends TestCase
         \Route::get('/about', function () {
             return 'About Us';
         });
-
     }
-
 }

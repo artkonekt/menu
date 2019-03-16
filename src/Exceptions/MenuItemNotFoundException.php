@@ -12,8 +12,6 @@
 
 namespace Konekt\Menu\Exceptions;
 
-
 class MenuItemNotFoundException extends \Exception
 {
-
 }

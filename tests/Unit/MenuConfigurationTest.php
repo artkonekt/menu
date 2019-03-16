@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Konekt\Menu\Exceptions\InvalidMenuConfigurationException;
 use Konekt\Menu\MenuConfiguration;
 use Konekt\Menu\Tests\TestCase;
@@ -57,7 +56,5 @@ class MenuConfigurationTest extends TestCase
         $this->assertFalse($config->cascadeData);
         $this->assertEquals('link', $config->activeElement);
         $this->assertEquals('is-active', $config->activeClass);
-
     }
-
 }

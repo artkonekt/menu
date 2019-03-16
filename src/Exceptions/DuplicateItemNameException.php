@@ -12,8 +12,6 @@
 
 namespace Konekt\Menu\Exceptions;
 
-
 class DuplicateItemNameException extends \Exception
 {
-
 }

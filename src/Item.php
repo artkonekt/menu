@@ -87,7 +87,7 @@ class Item
      */
     public function addSubItem($name, $title, $options = [])
     {
-        $options = is_array($options) ? $options : ['url' => $options];
+        $options           = is_array($options) ? $options : ['url' => $options];
         $options['parent'] = $this;
 
         return $this->menu->addItem($name, $title, $options);
@@ -195,7 +195,7 @@ class Item
      */
     public function children()
     {
-        return $this->menu->items->filter(function($item) {
+        return $this->menu->items->filter(function ($item) {
             return $item->hasParent() && $item->parent->name == $this->name;
         });
     }
@@ -424,5 +424,4 @@ class Item
             )
         );
     }
-
 }

@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu;
 
-
 class Utils
 {
     /**
@@ -74,5 +73,4 @@ class Utils
 
         return count($attrs) ? ' ' . implode(' ', $attrs) : '';
     }
-
 }

@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
-
 use Konekt\Menu\Link;
 use Konekt\Menu\Tests\TestCase;
 use Route;
@@ -48,7 +47,5 @@ class LinkRouteTest extends TestCase
             [['user.destroy', 'id' => 'john.smith'], self::APP_URL . '/user/john.smith'],
             [['read_news', 'id' => '1023'], self::APP_URL . '/news/read?id=1023'],
         ];
-
     }
-
 }

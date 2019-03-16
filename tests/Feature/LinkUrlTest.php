@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
-
 use Konekt\Menu\Link;
 use Konekt\Menu\Tests\TestCase;
 
@@ -38,5 +37,4 @@ class LinkUrlTest extends TestCase
             ['page?id=53', self::APP_URL . '/page?id=53']
         ];
     }
-
 }

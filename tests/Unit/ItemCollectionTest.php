@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Konekt\Menu\Exceptions\DuplicateItemNameException;
 use Konekt\Menu\Menu;
 use Konekt\Menu\MenuFactory;
@@ -117,5 +116,4 @@ class ItemCollectionTest extends TestCase
         $this->menu->addItem('contact', 'Contact', ['url' => '/contact', 'category' => 'internal']);
         $this->menu->addItem('google', 'Google', 'https://google.com')->data('engine', 'google');
     }
-
 }

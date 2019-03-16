@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Renderers;
 
-
 use Konekt\Menu\Contracts\MenuRenderer;
 use Konekt\Menu\Menu;
 
@@ -29,6 +28,4 @@ class UlMenuRenderer implements MenuRenderer
 
         return $result;
     }
-
-
 }

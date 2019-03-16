@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu;
 
-
 use Konekt\Menu\Exceptions\InvalidMenuConfigurationException;
 
 class MenuConfiguration
@@ -61,5 +60,4 @@ class MenuConfiguration
             );
         }
     }
-
 }

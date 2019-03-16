@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Konekt\Menu\Link;
 use PHPUnit\Framework\TestCase;
 
@@ -65,8 +64,6 @@ class LinkTest extends TestCase
         $this->assertNull($link->attr('kaboom'));
         $link->attr(['kaboom' => 'crackle']);
         $this->assertEquals('crackle', $link->attr('kaboom'));
-
-
     }
 
     public function testDynamicPropertiesCanBeRead()
@@ -88,5 +85,4 @@ class LinkTest extends TestCase
         $this->assertEquals('Warsaw', $link->zoink);
         $this->assertEquals('Warsaw', $link->attr('zoink'));
     }
-
 }

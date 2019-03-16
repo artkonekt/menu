@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;
 use Konekt\Menu\Repository;
 use Konekt\Menu\Tests\TestCase;
@@ -105,5 +104,4 @@ class RepositoryTest extends TestCase
         $this->repo->create('xmenu', ['share' => false]);
         $this->assertNull(\View::shared('xmenu'));
     }
-
 }

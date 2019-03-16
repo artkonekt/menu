@@ -48,7 +48,7 @@ class Link
      */
     public function activate()
     {
-        $this->isActive = true;
+        $this->isActive            = true;
         $this->attributes['class'] = Utils::addHtmlClass(
             array_get($this->attributes, 'class', ''),
             $this->activeClass
@@ -158,7 +158,4 @@ class Link
 
         return action($action);
     }
-
-
-
 }

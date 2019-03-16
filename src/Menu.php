@@ -64,7 +64,7 @@ class Menu
     public function addItem($name, $title, $options = [])
     {
         $options = is_string($options) ? ['url' => $options] : $options;
-        $item = new Item($this, $name, $title, $options);
+        $item    = new Item($this, $name, $title, $options);
         $this->items->addItem($item);
 
         return $item;
@@ -110,5 +110,4 @@ class Menu
     {
         return $this->items->get($prop);
     }
-
 }

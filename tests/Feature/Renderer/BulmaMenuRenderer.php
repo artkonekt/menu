@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature\Renderer;
 
-
 use Konekt\Menu\Contracts\MenuRenderer;
 use Konekt\Menu\Item;
 use Konekt\Menu\ItemCollection;
@@ -75,6 +74,4 @@ class BulmaMenuRenderer implements MenuRenderer
             $tabs
         );
     }
-
-
 }

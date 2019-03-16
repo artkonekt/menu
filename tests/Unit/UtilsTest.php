@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Unit;
 
-
 use Konekt\Menu\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -88,5 +87,4 @@ class UtilsTest extends TestCase
             [['class' => 'btn btn-primary', 'disabled'], ' class="btn btn-primary" disabled']
         ];
     }
-
 }

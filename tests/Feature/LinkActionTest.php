@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
-
 use Konekt\Menu\Link;
 use Konekt\Menu\Tests\TestCase;
 use Route;
@@ -48,8 +47,5 @@ class LinkActionTest extends TestCase
             [['ProjectController@destroy', 'id' => 'batagang'], self::APP_URL . '/project/batagang'],
             [['CategoryController@show', 'slug' => 'tablets'], self::APP_URL . '/category/tablets'],
         ];
-
     }
-
-
 }

@@ -23,7 +23,7 @@ class CustomRendererTest extends TestCase
 
         $menu = Menu::create('bulma', [
             'active_element' => 'link',
-            'active_class' => 'is-active'
+            'active_class'   => 'is-active'
         ]);
 
         $menu->addItem('dashboard', 'Dashboard', '/dashboard');
@@ -72,5 +72,4 @@ class CustomRendererTest extends TestCase
             $this->assertEquals($times, substr_count($html, $needle));
         }
     }
-
 }

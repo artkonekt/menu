@@ -26,5 +26,4 @@ class Menu extends Facade
     {
         return 'menu';
     }
-
 }

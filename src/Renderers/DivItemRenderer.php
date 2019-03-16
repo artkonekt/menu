@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Renderers;
 
-
 use Konekt\Menu\Contracts\ItemRenderer;
 use Konekt\Menu\Item;
 
@@ -20,7 +19,7 @@ class DivItemRenderer implements ItemRenderer
 {
     public function render(Item $item)
     {
-        if($item->hasLink()) {
+        if ($item->hasLink()) {
             $link = sprintf('<a href="%s"%s>%s</a>',
                 $item->link->url(),
                 $item->link->attributesAsHtml(),
@@ -32,5 +31,4 @@ class DivItemRenderer implements ItemRenderer
 
         return sprintf("<div%s>%s</div>", $item->attributesAsHtml(), $link);
     }
-
 }

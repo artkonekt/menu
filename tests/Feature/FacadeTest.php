@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
-
 use Konekt\Menu\Tests\TestCase;
 use Menu; // The Facade
 
@@ -30,5 +29,4 @@ class FacadeTest extends TestCase
         $this->assertNull($menu->getItem('home')->url());
         $this->assertEquals('http://to.co', $menu->getItem('twitter')->url());
     }
-
 }

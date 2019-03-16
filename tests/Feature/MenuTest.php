@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
-
 use Konekt\Menu\Menu;
 use Konekt\Menu\Tests\TestCase;
 
@@ -50,7 +49,6 @@ class MenuTest extends TestCase
             sprintf('<li><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
-
     }
 
     public function testOlRenderer()
@@ -75,7 +73,6 @@ class MenuTest extends TestCase
             sprintf('<li><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
-
     }
 
     public function testDivRenderer()
@@ -121,5 +118,4 @@ class MenuTest extends TestCase
             $this->menu->render('ul')
         );
     }
-
 }

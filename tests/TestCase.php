@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Tests;
 
-
 use Illuminate\Database\Schema\Blueprint;
 use Konekt\Menu\Facades\Menu;
 use Konekt\Menu\MenuServiceProvider;

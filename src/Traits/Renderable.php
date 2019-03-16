@@ -12,7 +12,6 @@
 
 namespace Konekt\Menu\Traits;
 
-
 trait Renderable
 {
     /** @var string|null    The name of the renderer */
@@ -32,5 +31,4 @@ trait Renderable
 
         return $renderer->render($this);
     }
-
 }
