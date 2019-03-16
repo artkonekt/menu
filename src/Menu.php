@@ -65,7 +65,7 @@ class Menu
     {
         $options = is_string($options) ? ['url' => $options] : $options;
         $item = new Item($this, $name, $title, $options);
-        $this->items->add($item);
+        $this->items->addItem($item);
 
         return $item;
     }

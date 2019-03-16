@@ -103,7 +103,7 @@ class ItemCollectionTest extends TestCase
         $this->assertEquals($originalCount - 4, $this->menu->items->count());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -17,6 +17,21 @@ use Konekt\Menu\Exceptions\DuplicateItemNameException;
 class ItemCollection extends Collection
 {
     /**
+     * Alias to addItem. Needed for Laravel 5.8 compatibility
+     * @see https://github.com/artkonekt/menu/issues/3
+     * @see https://github.com/laravel/framework/pull/27082
+     *
+     * @param mixed $item
+     *
+     * @return $this
+     * @throws DuplicateItemNameException
+     */
+    public function add($item)
+    {
+        return $this->addItem($item);
+    }
+
+    /**
      * Add new Item to the collection. Performs check for name uniqueness
      *
      * @param Item $item
@@ -24,7 +39,7 @@ class ItemCollection extends Collection
      * @return $this
      * @throws DuplicateItemNameException
      */
-    public function add(Item $item)
+    public function addItem(Item $item)
     {
         if ($this->has($item->name)) {
             throw new DuplicateItemNameException(

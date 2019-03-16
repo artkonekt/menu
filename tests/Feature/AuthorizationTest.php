@@ -137,7 +137,7 @@ class AuthorizationTest extends TestCase
         $this->assertFalse($item->isAllowed($this->user));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

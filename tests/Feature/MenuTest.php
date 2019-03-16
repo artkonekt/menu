@@ -21,7 +21,7 @@ class MenuTest extends TestCase
     /** @var  Menu */
     protected $menu;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->menu = \Menu::create('menu');
@@ -50,7 +50,7 @@ class MenuTest extends TestCase
             sprintf('<li><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
-        
+
     }
 
     public function testOlRenderer()

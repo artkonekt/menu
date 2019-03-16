@@ -22,7 +22,7 @@ class RepositoryTest extends TestCase
     /** @var  Repository */
     protected $repo;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -139,7 +139,7 @@ class ItemTest extends TestCase
         return $result;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         \Route::get('/articles/{slug}', function ($slug) {
