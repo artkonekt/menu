@@ -365,7 +365,7 @@ class Item
     /**
      * Activate the item if it's enabled in menu config and item's url matches the request URI
      */
-    protected function checkActivation()
+    public function checkActivation()
     {
         if ($this->menu->config->autoActivate && $this->currentUrlMatches()) {
             $this->activate();
