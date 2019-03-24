@@ -4,6 +4,11 @@
 
 ## 1.X
 
+### 1.3.1
+###### 2019-03-24
+
+- Changed Item::checkActivation from protected to public
+
 ### 1.3.0
 ###### 2019-03-16
 
