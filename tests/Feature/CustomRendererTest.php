@@ -11,6 +11,7 @@
 
 namespace Konekt\Menu\Tests\Feature;
 
+use Illuminate\Support\Str;
 use Konekt\Menu\Tests\Feature\Renderer\BulmaMenuRenderer;
 use Konekt\Menu\Tests\TestCase;
 use Menu;
@@ -57,16 +58,20 @@ class CustomRendererTest extends TestCase
 
     protected function assertContainsLink($link, $html, $times = null)
     {
-        if (starts_with($link, '#')) {
+        if (Str::startsWith($link, '#')) {
             $url = $link;
-        } elseif (starts_with($link, '/')) {
+        } elseif (Str::startsWith($link, '/')) {
             $url = self::APP_URL . $link;
         } else {
             $url = self::APP_URL . '/' . $link;
         }
 
         $needle = sprintf('<a href="%s"', $url);
-        $this->assertContains($needle, $html);
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString($needle, $html);
+        } else {
+            $this->assertContains($needle, $html);
+        }
 
         if (!is_null($times)) {
             $this->assertEquals($times, substr_count($html, $needle));

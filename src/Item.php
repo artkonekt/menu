@@ -12,6 +12,7 @@
 namespace Konekt\Menu;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Traits\HasAttributes;
@@ -64,11 +65,11 @@ class Item
         $this->menu       = $menu;
         $this->name       = $name;
         $this->title      = $title;
-        $this->attributes = array_except($options, $this->reserved);
-        $this->parent     = $this->resolveParent(array_get($options, 'parent', null));
-        $this->renderer   = array_get($options, 'renderer', null);
+        $this->attributes = Arr::except($options, $this->reserved);
+        $this->parent     = $this->resolveParent(Arr::get($options, 'parent', null));
+        $this->renderer   = Arr::get($options, 'renderer', null);
 
-        $path       = array_only($options, array('url', 'route', 'action'));
+        $path       = Arr::only($options, array('url', 'route', 'action'));
         if (!empty($path)) {
             $this->link = new Link($path, $this->menu->config->activeClass);
         }
@@ -380,7 +381,7 @@ class Item
     protected function setToActive()
     {
         $this->attributes['class'] = Utils::addHtmlClass(
-            array_get($this->attributes, 'class'),
+            Arr::get($this->attributes, 'class'),
             $this->menu->config->activeClass
         );
         $this->isActive = true;

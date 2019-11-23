@@ -11,6 +11,7 @@
 
 namespace Konekt\Menu;
 
+use Illuminate\Support\Arr;
 use Konekt\Menu\Traits\HasAttributes;
 
 class Link
@@ -50,7 +51,7 @@ class Link
     {
         $this->isActive            = true;
         $this->attributes['class'] = Utils::addHtmlClass(
-            array_get($this->attributes, 'class', ''),
+            Arr::get($this->attributes, 'class', ''),
             $this->activeClass
         );
 

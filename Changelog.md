@@ -4,6 +4,12 @@
 
 ## 1.X
 
+### Unreleased
+###### 2019-11-XX
+
+- Added Laravel 6.0 Support
+- Dropped Laravel 5.4 Support
+
 ### 1.3.1
 ###### 2019-03-24
 

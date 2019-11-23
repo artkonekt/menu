@@ -12,6 +12,7 @@
 
 namespace Konekt\Menu;
 
+use Illuminate\Support\Arr;
 use Konekt\Menu\Exceptions\InvalidMenuConfigurationException;
 
 class MenuConfiguration
@@ -45,11 +46,11 @@ class MenuConfiguration
 
     private function parseOptions(array $options)
     {
-        $this->autoActivate    = array_get($options, 'auto_activate', true);
-        $this->activateParents = array_get($options, 'activate_parents', true);
-        $this->activeClass     = array_get($options, 'active_class', 'active');
-        $this->activeElement   = strtolower(array_get($options, 'active_element', 'item'));
-        $this->cascadeData     = array_get($options, 'cascade_data', true);
+        $this->autoActivate    = Arr::get($options, 'auto_activate', true);
+        $this->activateParents = Arr::get($options, 'activate_parents', true);
+        $this->activeClass     = Arr::get($options, 'active_class', 'active');
+        $this->activeElement   = strtolower(Arr::get($options, 'active_element', 'item'));
+        $this->cascadeData     = Arr::get($options, 'cascade_data', true);
 
         if (!in_array($this->activeElement, self::ACTIVE_ELEMENT_TYPES)) {
             throw new InvalidMenuConfigurationException(

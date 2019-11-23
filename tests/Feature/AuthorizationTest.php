@@ -12,6 +12,7 @@
 namespace Konekt\Menu\Tests\Feature;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Konekt\Menu\Menu;
 use Konekt\Menu\MenuFactory;
 use Konekt\Menu\Tests\Dummies\User;
@@ -72,7 +73,7 @@ class AuthorizationTest extends TestCase
     {
         $item = $this->menu->addItem('new_inquiry', 'New Inquiry');
         $item->allowIf(function ($user) {
-            return str_contains($user->email, 'gatto.it');
+            return Str::contains($user->email, 'gatto.it');
         });
 
         $this->be($this->user);
@@ -93,7 +94,7 @@ class AuthorizationTest extends TestCase
         $itemAbout->allowIfUserCan('see projects');
 
         Gate::define('see projects', function ($user) {
-            return str_contains($user->email, 'gatto.it');
+            return Str::contains($user->email, 'gatto.it');
         });
 
         $this->assertTrue($itemAbout->isAllowed($this->user));
@@ -107,7 +108,7 @@ class AuthorizationTest extends TestCase
     {
         $itemAbout = $this->menu->addItem('projects', 'Projects', []);
         $itemAbout->allowIf(function ($user) {
-            return str_contains($user->email, 'latte');
+            return Str::contains($user->email, 'latte');
         });
 
         $this->assertTrue($itemAbout->isAllowed($this->anotherUser));
@@ -120,7 +121,7 @@ class AuthorizationTest extends TestCase
     public function multiple_auth_conditions_can_be_added()
     {
         Gate::define('see tits', function ($user) {
-            return str_contains($user->email, '.it');
+            return Str::contains($user->email, '.it');
         });
 
         $item = $this->menu->addItem('tits', 'Tits', []);
@@ -130,7 +131,7 @@ class AuthorizationTest extends TestCase
         $this->assertTrue($item->isAllowed($this->user));
 
         $item->allowIf(function ($user) {
-            return str_contains($user->email, 'latte');
+            return Str::contains($user->email, 'latte');
         });
 
         $this->assertTrue($item->isAllowed($this->anotherUser));

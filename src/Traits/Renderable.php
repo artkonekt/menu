@@ -12,6 +12,8 @@
 
 namespace Konekt\Menu\Traits;
 
+use Illuminate\Support\Str;
+
 trait Renderable
 {
     /** @var string|null    The name of the renderer */
@@ -25,7 +27,7 @@ trait Renderable
     public function render(string $rendererName = null)
     {
         $renderer = app(sprintf('konekt.menu.renderer.%s.%s',
-            snake_case(class_basename(static::class)),
+            Str::snake(class_basename(static::class)),
             $rendererName ?: $this->renderer
         ));
 
