@@ -41,10 +41,10 @@ class LinkActionTest extends TestCase
             ['ProjectController@index', self::APP_URL . '/project'],
             ['ProjectController@store', self::APP_URL . '/project'],
             ['ProjectController@create', self::APP_URL . '/project/create'],
-            [['ProjectController@show', 'id' => 1], self::APP_URL . '/project/1'],
-            [['ProjectController@edit', 'id' => 2], self::APP_URL . '/project/2/edit'],
-            [['ProjectController@update', 'id' => 'jira'], self::APP_URL . '/project/jira'],
-            [['ProjectController@destroy', 'id' => 'batagang'], self::APP_URL . '/project/batagang'],
+            [['ProjectController@show', 'project' => 1], self::APP_URL . '/project/1'],
+            [['ProjectController@edit', 'project' => 2], self::APP_URL . '/project/2/edit'],
+            [['ProjectController@update', 'project' => 'jira'], self::APP_URL . '/project/jira'],
+            [['ProjectController@destroy', 'project' => 'batagang'], self::APP_URL . '/project/batagang'],
             [['CategoryController@show', 'slug' => 'tablets'], self::APP_URL . '/category/tablets'],
         ];
     }

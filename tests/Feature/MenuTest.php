@@ -35,17 +35,17 @@ class MenuTest extends TestCase
         $this->assertStringStartsWith('<ul', $html);
         $this->assertStringEndsWith("</ul>\n", $html);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li class="active"><a href="%s">Home</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li><a href="%s/about">About</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
@@ -59,17 +59,17 @@ class MenuTest extends TestCase
         $this->assertStringStartsWith('<ol', $html);
         $this->assertStringEndsWith("</ol>\n", $html);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li class="active"><a href="%s">Home</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li><a href="%s/about">About</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<li><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
@@ -83,17 +83,17 @@ class MenuTest extends TestCase
         $this->assertStringStartsWith('<div', $html);
         $this->assertStringEndsWith("</div>\n", $html);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<div class="active"><a href="%s">Home</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<div><a href="%s/about">About</a>', self::APP_URL),
             $html
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             sprintf('<div><a href="%s/contact">Contact</a>', self::APP_URL),
             $html
         );
@@ -102,16 +102,16 @@ class MenuTest extends TestCase
     public function testAttributesAreProperlyRendered()
     {
         $this->menu->attr('class', 'nav nav-inverse');
-        $this->assertContains('<ul class="nav nav-inverse"', $this->menu->render('ul'));
+        $this->assertStringContainsString('<ul class="nav nav-inverse"', $this->menu->render('ul'));
 
         $this->menu->home->attr(['disabled']);
-        $this->assertContains('<li class="active" disabled', $this->menu->render('ul'));
+        $this->assertStringContainsString('<li class="active" disabled', $this->menu->render('ul'));
 
         $this->menu->about->attr(['disabled', 'readonly' => 1]);
-        $this->assertContains('<li disabled readonly="1"', $this->menu->render('ul'));
+        $this->assertStringContainsString('<li disabled readonly="1"', $this->menu->render('ul'));
 
         $this->menu->contact->link->attr('target', '_blank');
-        $this->assertContains(sprintf(
+        $this->assertStringContainsString(sprintf(
                 '<a href="%s/contact" target="_blank"',
                 self::APP_URL
             ),

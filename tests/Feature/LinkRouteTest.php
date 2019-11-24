@@ -41,10 +41,10 @@ class LinkRouteTest extends TestCase
             ['user.index', self::APP_URL . '/user'],
             ['user.store', self::APP_URL . '/user'],
             ['user.create', self::APP_URL . '/user/create'],
-            [['user.show', 'id' => 1], self::APP_URL . '/user/1'],
-            [['user.edit', 'id' => 2], self::APP_URL . '/user/2/edit'],
-            [['user.update', 'id' => 'slug'], self::APP_URL . '/user/slug'],
-            [['user.destroy', 'id' => 'john.smith'], self::APP_URL . '/user/john.smith'],
+            [['user.show', 'user' => 1], self::APP_URL . '/user/1'],
+            [['user.edit', 'user' => 2], self::APP_URL . '/user/2/edit'],
+            [['user.update', 'user' => 'slug'], self::APP_URL . '/user/slug'],
+            [['user.destroy', 'user' => 'john.smith'], self::APP_URL . '/user/john.smith'],
             [['read_news', 'id' => '1023'], self::APP_URL . '/news/read?id=1023'],
         ];
     }

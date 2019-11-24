@@ -3,3 +3,4 @@ build/
 vendor/
 .idea/
 .DS_Store
+/.phpunit.result.cache

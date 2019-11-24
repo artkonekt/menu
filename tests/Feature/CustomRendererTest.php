@@ -36,7 +36,7 @@ class CustomRendererTest extends TestCase
 
         $html = $menu->render('bulma');
 
-        $this->assertContains('<aside class="menu">', $html);
+        $this->assertStringContainsString('<aside class="menu">', $html);
 
         $this->assertEquals(1, substr_count($html, '<aside class="menu">'));
         $this->assertEquals(1, substr_count($html, '</aside>'));
