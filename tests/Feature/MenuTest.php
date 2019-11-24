@@ -13,10 +13,13 @@
 namespace Konekt\Menu\Tests\Feature;
 
 use Konekt\Menu\Menu;
+use Konekt\Menu\Tests\PhpUnit6Compatible;
 use Konekt\Menu\Tests\TestCase;
 
 class MenuTest extends TestCase
 {
+    use PhpUnit6Compatible;
+
     /** @var  Menu */
     protected $menu;
 
