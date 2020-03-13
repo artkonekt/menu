@@ -4,8 +4,8 @@
 
 ## 1.X
 
-### Unreleased
-###### 2020-03-XX
+### 1.5.0
+###### 2020-03-13
 
 - Added Laravel 7 Support
 - Added PHP 7.4 Support
