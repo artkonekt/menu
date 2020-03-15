@@ -4,6 +4,11 @@
 
 ## 1.X
 
+### 1.6.1
+###### 2020-03-15
+
+- Fixed `hasActiveChild` and `actives` methods so that it works even if `active_element` config is set to "link"
+
 ### 1.6.0
 ###### 2020-03-15
 
