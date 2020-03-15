@@ -190,6 +190,16 @@ class Item
     }
 
     /**
+     * Returns true if either the item or its link is active
+     *
+     * @return bool
+     */
+    public function isItemOrLinkActive(): bool
+    {
+        return $this->isActive || ($this->hasLink() && $this->link->isActive);
+    }
+
+    /**
      * Returns true if any of the children is actie
      */
     public function hasActiveChild(): bool

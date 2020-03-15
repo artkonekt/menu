@@ -94,6 +94,25 @@ class ActiveItemsCollectionTest extends TestCase
         $this->assertTrue($parent1->hasActiveChild());
     }
 
+    /** @test */
+    public function has_active_child_returns_true_when_an_item_has_an_active_subitem_and_active_element_is_configured_for_link()
+    {
+        $this->app['request'] = $this->mockRequest('parent-1/child-1');
+
+        /** @var Menu $menu */
+        $menu = MenuFactory::create('sidebar', ['auto_activate' => true, 'active_element' => 'link']);
+
+        $parent1 = $menu->addItem('parent1', 'Parent 1', ['url' => '/parent-1']);
+        $parent1->addSubItem('parent1-child1', 'Child 1', ['url' => '/parent-1/child-1']);
+        $parent1->addSubItem('parent1-child2', 'Child 2', ['url' => '/parent-1/child-2']);
+
+        $parent2 = $menu->addItem('parent2', 'Parent 2', ['url' => '/parent-2']);
+        $parent2->addSubItem('parent2-child-a', 'Child A', ['url' => '/parent-2/child-a']);
+        $parent2->addSubItem('parent2-child-b', 'Child B', ['url' => '/parent-2/child-b']);
+
+        $this->assertTrue($parent1->hasActiveChild());
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

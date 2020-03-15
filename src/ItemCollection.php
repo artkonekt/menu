@@ -153,7 +153,7 @@ class ItemCollection extends Collection
     public function actives()
     {
         return $this->filter(function (Item $item) {
-            return $item->isActive;
+            return $item->isItemOrLinkActive();
         });
     }
 
