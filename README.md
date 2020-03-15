@@ -470,6 +470,26 @@ $menu->addItem('articles', 'Articles', '/articles')->active('articles/*');
 
 So `articles`, `articles/random-news-title` will both activate the `Articles` item.
 
+### Check for Active Children
+
+You can check if a menu item has an active sub item by calling:
+
+```php
+$item->hasActiveChild();
+// (bool) false
+```
+
+You can get the active item(s) from an item colletion by applying the `actives()` filter on them:
+
+```php
+$menu->roots()->actives();
+// Konekt\Menu\ItemCollection
+
+// or:
+
+$item->children()->actives();
+// Konekt\Menu\ItemCollection
+```
 
 ## Append and Prepend
 

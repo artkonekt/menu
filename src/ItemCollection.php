@@ -145,6 +145,18 @@ class ItemCollection extends Collection
         });
     }
 
+    /**
+     * Returns active items
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function actives()
+    {
+        return $this->filter(function (Item $item) {
+            return $item->isActive;
+        });
+    }
+
 
     /**
      * Returns the items who have children

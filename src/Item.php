@@ -190,6 +190,14 @@ class Item
     }
 
     /**
+     * Returns true if any of the children is actie
+     */
+    public function hasActiveChild(): bool
+    {
+        return (bool) $this->children()->actives()->count();
+    }
+
+    /**
      * Returns children of the item
      *
      * @return \Konekt\Menu\ItemCollection
