@@ -419,7 +419,8 @@ class Item
         }
 
         if ($this->activeUrlPattern) { // If pattern was set, see if it matches
-            $pattern = ltrim(preg_replace('/\/\*/', '(/.*)?', $this->activeUrlPattern), '/');
+            $pattern = ltrim(preg_replace('/\*/', '(.*)?', $this->activeUrlPattern), '/');
+
             return preg_match("@^{$pattern}\z@", Request::path());
         }
 
