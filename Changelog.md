@@ -4,6 +4,11 @@
 
 ## 1.X
 
+### 1.6.0
+###### 2020-03-15
+
+- Added `hasActiveChildren` and `actives` methods to ItemCollection class
+
 ### 1.5.0
 ###### 2020-03-13
 
