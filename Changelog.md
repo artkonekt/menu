@@ -4,6 +4,11 @@
 
 ## 1.X
 
+### 1.6.2
+###### 2020-03-15
+
+- Fixed URL wildcard matching bug when the wildcard wasn't placed right after a slash
+
 ### 1.6.1
 ###### 2020-03-15
 

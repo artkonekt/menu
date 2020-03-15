@@ -25,7 +25,6 @@ A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
 * [Manipulating Links](#manipulating-links)
 	- [Link's Href Property](#links-href-property)
 * [Active Item](#active-item)
-	- [RESTful URLs](#restful-urls)
 	- [URL Wildcards](#url-wildcards)
     - [Check for Active Children](#check-for-active-children) 
 * [Inserting a Separator](#inserting-a-separator)
@@ -466,7 +465,7 @@ Menu::create('nav', [
 Konekt Menu component makes you able to define a pattern for a certain item, if the automatic activation can't help:
 
 ```php
-$menu->addItem('articles', 'Articles', '/articles')->active('articles/*');
+$menu->addItem('articles', 'Articles', '/articles')->activateOnUrls('articles/*');
 ```
 
 So `articles`, `articles/random-news-title` will both activate the `Articles` item.
