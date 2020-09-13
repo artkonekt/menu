@@ -9,7 +9,7 @@
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
 
-A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
+A quick and easy way to create menus in [Laravel 5-8](https://laravel.com/)
 
 ## Documentation
 
@@ -48,32 +48,7 @@ A quick and easy way to create menus in [Laravel 5](https://laravel.com/)
 composer require konekt/menu
 ```
 
-> This library supports: **Laravel**: 5.4 - 5.8, **PHP**: 7.1 - 7.3 
-
-Now, append Laravel Menu service provider to `providers` array in `config/app.php`:
-
-> *Note*: On Laravel 5.5 and above this step gets automatically done by composer.
-
-```php
-//...
-'providers' => [
-    // Other Service Providers    
-    'Konekt\Menu\MenuServiceProvider',
-    
-    //...
-]
-```
-#### Register The Facade
-
-You can also register the `Menu` facade in `config/app.php`:
-
-```php
-'aliases' => [
-    // ...
-    'Menu' => Konekt\Menu\Facades\Menu::class
-]
-```
-
+> This library supports: **Laravel**: 5.5 - 8.x, **PHP**: 7.1 - 7.4 
 
 ## Getting Started
 
