@@ -44,7 +44,9 @@ class BulmaMenuRenderer implements MenuRenderer
     protected function renderItem(Item $item, $level)
     {
         if ($item->hasChildren()) {
-            return $this->renderItemLi($item, $level,
+            return $this->renderItemLi(
+                $item,
+                $level,
                 $this->renderLevel($item->children(), $level + 1)
             );
         }
@@ -55,7 +57,8 @@ class BulmaMenuRenderer implements MenuRenderer
     protected function renderItemLi(Item $item, $level, $extraHtml = '')
     {
         $tabs = str_repeat("\t", $level + 1);
-        $link = sprintf('<a href="%s"%s>%s</a>',
+        $link = sprintf(
+            '<a href="%s"%s>%s</a>',
             $item->link->url(),
             $item->link->attributesAsHtml(),
             $item->title
@@ -65,7 +68,8 @@ class BulmaMenuRenderer implements MenuRenderer
             return sprintf("%s<li%s>%s</li>\n", $tabs, $item->attributesAsHtml(), $link);
         }
 
-        return sprintf("%s<li%s>\n%s%s\n%s\n%s</li>\n",
+        return sprintf(
+            "%s<li%s>\n%s%s\n%s\n%s</li>\n",
             $tabs,
             $item->attributesAsHtml(),
             $tabs,

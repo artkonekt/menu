@@ -43,8 +43,10 @@ class ItemCollection extends Collection
     {
         if ($this->has($item->name)) {
             throw new DuplicateItemNameException(
-                sprintf('An item with name `%s` already exists in the menu `%s`',
-                    $item->name, $item->menu->name
+                sprintf(
+                    'An item with name `%s` already exists in the menu `%s`',
+                    $item->name,
+                    $item->menu->name
                 )
             );
         }

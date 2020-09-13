@@ -54,7 +54,8 @@ class MenuConfiguration
 
         if (!in_array($this->activeElement, self::ACTIVE_ELEMENT_TYPES)) {
             throw new InvalidMenuConfigurationException(
-                sprintf('`%s` is not a valid value for the `active_element` setting. Must be one of: `%s`',
+                sprintf(
+                    '`%s` is not a valid value for the `active_element` setting. Must be one of: `%s`',
                     $this->activeElement,
                     implode(',', self::ACTIVE_ELEMENT_TYPES)
                 )

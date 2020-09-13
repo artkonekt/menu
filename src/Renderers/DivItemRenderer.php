@@ -20,7 +20,8 @@ class DivItemRenderer implements ItemRenderer
     public function render(Item $item)
     {
         if ($item->hasLink()) {
-            $link = sprintf('<a href="%s"%s>%s</a>',
+            $link = sprintf(
+                '<a href="%s"%s>%s</a>',
                 $item->link->url(),
                 $item->link->attributesAsHtml(),
                 $item->title

@@ -438,7 +438,8 @@ class Item
         }
 
         throw new MenuItemNotFoundException(
-            sprintf('Item named `%s` could not be found in the `%s` menu',
+            sprintf(
+                'Item named `%s` could not be found in the `%s` menu',
                 (string)$parent,
                 $this->menu->name
             )

@@ -26,7 +26,8 @@ trait Renderable
      */
     public function render(string $rendererName = null)
     {
-        $renderer = app(sprintf('konekt.menu.renderer.%s.%s',
+        $renderer = app(sprintf(
+            'konekt.menu.renderer.%s.%s',
             Str::snake(class_basename(static::class)),
             $rendererName ?: $this->renderer
         ));

@@ -114,10 +114,11 @@ class MenuTest extends TestCase
         $this->assertStringContainsString('<li disabled readonly="1"', $this->menu->render('ul'));
 
         $this->menu->contact->link->attr('target', '_blank');
-        $this->assertStringContainsString(sprintf(
-                '<a href="%s/contact" target="_blank"',
-                self::APP_URL
-            ),
+        $this->assertStringContainsString(
+            sprintf(
+            '<a href="%s/contact" target="_blank"',
+            self::APP_URL
+        ),
             $this->menu->render('ul')
         );
     }

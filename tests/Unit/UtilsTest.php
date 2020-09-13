@@ -45,7 +45,9 @@ class UtilsTest extends TestCase
      */
     public function testIsAbsoulteUrl($url, $expected)
     {
-        $this->assertEquals($expected, Utils::isAbsoluteUrl($url),
+        $this->assertEquals(
+            $expected,
+            Utils::isAbsoluteUrl($url),
             sprintf('%s should%s be interpreted as an absoulte URL', $url, $expected ? '' : ' not')
         );
     }
