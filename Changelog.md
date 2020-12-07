@@ -4,6 +4,15 @@
 
 ## 1.X
 
+### Unreleased
+###### 2020-XX-YY
+
+- Added PHP 8 support
+- Dropped PHP 7.1 support
+- Dropped PHP 7.2 support
+- Dropped Laravel 5 support
+- Changed CI from Travis to Github Actions
+
 ### 1.7.0
 ###### 2020-09-13
 

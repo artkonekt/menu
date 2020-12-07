@@ -13,14 +13,11 @@ namespace Konekt\Menu\Tests\Feature;
 
 use Illuminate\Support\Str;
 use Konekt\Menu\Tests\Feature\Renderer\BulmaMenuRenderer;
-use Konekt\Menu\Tests\PhpUnit6Compatible;
 use Konekt\Menu\Tests\TestCase;
 use Menu;
 
 class CustomRendererTest extends TestCase
 {
-    use PhpUnit6Compatible;
-
     public function testBulmaRendererExample()
     {
         $this->app->singleton('konekt.menu.renderer.menu.bulma', BulmaMenuRenderer::class);
