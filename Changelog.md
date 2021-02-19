@@ -4,6 +4,11 @@
 
 ## 1.X
 
+### 1.8.2
+###### 2021-02-19
+
+- Fixed method annotations on the `Menu` facade 🤦
+
 ### 1.8.1
 ###### 2021-02-19
 
