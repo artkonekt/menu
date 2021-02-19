@@ -4,6 +4,13 @@
 
 ## 1.X
 
+### 1.8.1
+###### 2021-02-19
+
+- Tiny internal polish release
+- Added method annotations to `Menu` facade
+- Switch over to PSR-12 internally
+
 ### 1.8.0
 ###### 2020-12-07
 
