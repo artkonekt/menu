@@ -14,10 +14,9 @@ namespace Konekt\Menu\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static create($name, $options = []): \Konekt\Menu\Menu
- * @method static get($name): \Konekt\Menu\Menu|null
- * @method static all(): \Illuminate\Support\Collection
- *
+ * @method static \Konekt\Menu\Menu create($name, $options = [])
+ * @method static \Konekt\Menu\Menu|null get($name)
+ * @method static \Illuminate\Support\Collection all()
  */
 class Menu extends Facade
 {
