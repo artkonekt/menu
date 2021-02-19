@@ -34,7 +34,6 @@ class Repository
         $this->menus = collect();
     }
 
-
     /**
      * Create a new menu instance
      *
@@ -80,7 +79,6 @@ class Repository
     {
         return $this->menus->has($name);
     }
-
 
     /**
      * Returns all the menus (as collection)

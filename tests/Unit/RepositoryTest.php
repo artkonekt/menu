@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests\Unit;
 
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;

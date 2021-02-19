@@ -159,7 +159,6 @@ class ItemCollection extends Collection
         });
     }
 
-
     /**
      * Returns the items who have children
      *

@@ -20,7 +20,6 @@ use Konekt\Menu\Renderers\UlMenuRenderer;
 
 class MenuServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *

@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests\Feature;
 
 use Konekt\Menu\Link;

@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu;
 
 use Illuminate\Support\Arr;
@@ -17,7 +16,7 @@ use Konekt\Menu\Exceptions\InvalidMenuConfigurationException;
 
 class MenuConfiguration
 {
-    const ACTIVE_ELEMENT_TYPES = ['item', 'link'];
+    public const ACTIVE_ELEMENT_TYPES = ['item', 'link'];
 
     /** @var bool   Whether to auto activate items based on routes. True by default */
     public $autoActivate;

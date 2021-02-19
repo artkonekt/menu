@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Exceptions;
 
 class InvalidMenuConfigurationException extends \Exception

@@ -9,18 +9,17 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\AliasLoader;
 use Konekt\Menu\Facades\Menu;
 use Konekt\Menu\MenuServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Illuminate\Foundation\AliasLoader;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    const APP_URL = 'http://menu.test';
+    public const APP_URL = 'http://menu.test';
     /**
      * @param \Illuminate\Foundation\Application $app
      *

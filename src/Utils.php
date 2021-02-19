@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu;
 
 class Utils

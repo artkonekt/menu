@@ -92,7 +92,6 @@ class Link
         return null;
     }
 
-
     /**
      * Check for a method of the same name if the attribute doesn't exist.
      *
@@ -104,7 +103,6 @@ class Link
     {
         return $this->attr($property);
     }
-
 
     public function __set($property, $value)
     {

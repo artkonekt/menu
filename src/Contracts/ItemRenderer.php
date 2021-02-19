@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Contracts;
 
 use Konekt\Menu\Item;

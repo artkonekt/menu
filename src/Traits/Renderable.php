@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Traits;
 
 use Illuminate\Support\Str;

@@ -21,7 +21,8 @@ use Request;
 
 class Item
 {
-    use HasAttributes, Renderable;
+    use HasAttributes;
+    use Renderable;
 
     /** @var string The name (or id) of the menu item */
     public $name;

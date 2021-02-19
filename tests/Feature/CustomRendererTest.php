@@ -55,7 +55,6 @@ class CustomRendererTest extends TestCase
         $this->assertContainsLink('#', $html, 1);
     }
 
-
     protected function assertContainsLink($link, $html, $times = null)
     {
         if (Str::startsWith($link, '#')) {

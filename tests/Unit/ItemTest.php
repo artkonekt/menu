@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests\Unit;
 
 use Illuminate\Http\Request;
@@ -131,7 +130,7 @@ class ItemTest extends TestCase
         $result = \Mockery::mock(Request::class);
         $result->shouldReceive('getScheme')->andReturn('http');
         $result->shouldReceive('root')->andReturn(self::APP_URL);
-        $result->shouldReceive('url')->andReturn(self::APP_URL . '/' .$path);
+        $result->shouldReceive('url')->andReturn(self::APP_URL . '/' . $path);
         $result->shouldReceive('path')->andReturn($path);
         $result->shouldReceive('setUserResolver');
 

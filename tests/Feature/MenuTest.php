@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Tests\Feature;
 
 use Konekt\Menu\Menu;
@@ -113,9 +112,9 @@ class MenuTest extends TestCase
         $this->menu->contact->link->attr('target', '_blank');
         $this->assertStringContainsString(
             sprintf(
-            '<a href="%s/contact" target="_blank"',
-            self::APP_URL
-        ),
+                '<a href="%s/contact" target="_blank"',
+                self::APP_URL
+            ),
             $this->menu->render('ul')
         );
     }

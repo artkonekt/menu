@@ -9,7 +9,6 @@
  *
  */
 
-
 namespace Konekt\Menu\Renderers;
 
 use Konekt\Menu\Contracts\MenuRenderer;

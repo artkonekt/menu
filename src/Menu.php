@@ -19,7 +19,8 @@ use Konekt\Menu\Traits\Renderable;
  */
 class Menu
 {
-    use HasAttributes, Renderable;
+    use HasAttributes;
+    use Renderable;
 
     /**
      * @var ItemCollection
