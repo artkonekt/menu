@@ -4,6 +4,12 @@
 
 ## 1.X
 
+### Unreleased
+###### 2022-02-XX
+
+- Added PHP 8.1 Support
+- Added Laravel 9 Support
+
 ### 1.8.2
 ###### 2021-02-19
 

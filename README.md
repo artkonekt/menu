@@ -8,7 +8,7 @@
 [![StyleCI](https://styleci.io/repos/94574866/shield?branch=master)](https://styleci.io/repos/94574866)
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-A quick and easy way to create menus in [Laravel 6-8](https://laravel.com/)
+A quick and easy way to create menus in [Laravel 6-9](https://laravel.com/)
 
 ## Laravel Compatibility
 
@@ -22,6 +22,7 @@ A quick and easy way to create menus in [Laravel 6-8](https://laravel.com/)
 | 6.x     | 1.4+        |
 | 7.x     | 1.5+        |
 | 8.x     | 1.7+        |
+| 9.x     | 1.9+        |
 
 ## PHP Compatibility
 
@@ -33,6 +34,7 @@ A quick and easy way to create menus in [Laravel 6-8](https://laravel.com/)
 | 7.3 | 1.3+        |
 | 7.4 | 1.5+        |
 | 8.0 | 1.8+        |
+| 8.1 | 1.9+        |
 
 ## Documentation
 
@@ -71,7 +73,7 @@ A quick and easy way to create menus in [Laravel 6-8](https://laravel.com/)
 composer require konekt/menu
 ```
 
-> This library supports: **Laravel**: 6.x - 8.x, **PHP**: 7.3 - 8.0 
+> This library supports: **Laravel**: 6.x - 9.x, **PHP**: 7.3 - 8.1 
 
 ## Getting Started
 
