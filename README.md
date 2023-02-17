@@ -36,6 +36,7 @@ A quick and easy way to create menus in [Laravel 9-10](https://laravel.com/)
 | 7.4 | 1.5 - 1.9   |
 | 8.0 | 1.8+        |
 | 8.1 | 1.9+        |
+| 8.2 | 1.10+       |
 
 ## Documentation
 
