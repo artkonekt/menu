@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright (c) 2017 [Attila Fulop](https://github.com/fulopattila122)
+Copyright (c) 2017-2023 [Attila Fulop](https://github.com/fulopattila122)
 
 Copyright (c) 2014-2017 Lavary (mrl.8081@gmail.com)
 

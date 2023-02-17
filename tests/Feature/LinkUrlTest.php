@@ -25,7 +25,7 @@ class LinkUrlTest extends TestCase
         $this->assertEquals($expected, $link->url());
     }
 
-    public function urlsResolverProvider()
+    public static function urlsResolverProvider()
     {
         return [
             ['https://zeit.co', 'https://zeit.co'],

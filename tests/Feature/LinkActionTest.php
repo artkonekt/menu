@@ -34,7 +34,7 @@ class LinkActionTest extends TestCase
         $this->assertEquals($expectedUrl, $link->url());
     }
 
-    public function actionsResolverProvider()
+    public static function actionsResolverProvider()
     {
         return [
             ['ProjectController@index', self::APP_URL . '/project'],

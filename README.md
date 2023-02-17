@@ -2,13 +2,13 @@
 
 > This is a rework of [Lavary Menu](https://github.com/lavary/laravel-menu)
 
-[![Tests](https://img.shields.io/github/workflow/status/artkonekt/menu/tests/master?style=flat-square)](https://github.com/artkonekt/menu/actions?query=workflow%3Atests)
+[![Tests](https://img.shields.io/github/actions/workflow/status/artkonekt/menu/tests.yml?branch=master&style=flat-square)](https://github.com/artkonekt/menu/actions?query=workflow%3Atests)
 [![Stable packagist version](https://img.shields.io/packagist/v/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
 [![Packagist downloads](https://img.shields.io/packagist/dt/konekt/menu.svg?style=flat-square)](https://packagist.org/packages/konekt/menu)
 [![StyleCI](https://styleci.io/repos/94574866/shield?branch=master)](https://styleci.io/repos/94574866)
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-A quick and easy way to create menus in [Laravel 6-9](https://laravel.com/)
+A quick and easy way to create menus in [Laravel 9-10](https://laravel.com/)
 
 ## Laravel Compatibility
 
@@ -19,10 +19,11 @@ A quick and easy way to create menus in [Laravel 6-9](https://laravel.com/)
 | 5.6     | 1.1 - 1.7   |
 | 5.7     | 1.2 - 1.7   |
 | 5.8     | 1.3 - 1.7   |
-| 6.x     | 1.4+        |
-| 7.x     | 1.5+        |
-| 8.x     | 1.7+        |
+| 6.x     | 1.4 - 1.9   |
+| 7.x     | 1.5 - 1.9   |
+| 8.x     | 1.7 - 1.9   |
 | 9.x     | 1.9+        |
+| 10.x    | 1.10+       |
 
 ## PHP Compatibility
 
@@ -31,8 +32,8 @@ A quick and easy way to create menus in [Laravel 6-9](https://laravel.com/)
 | 7.0 | 1.0 - 1.2   |
 | 7.1 | 1.0 - 1.5   |
 | 7.2 | 1.1 - 1.7   |
-| 7.3 | 1.3+        |
-| 7.4 | 1.5+        |
+| 7.3 | 1.3 - 1.9   |
+| 7.4 | 1.5 - 1.9   |
 | 8.0 | 1.8+        |
 | 8.1 | 1.9+        |
 

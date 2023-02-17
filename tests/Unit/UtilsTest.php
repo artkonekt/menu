@@ -24,7 +24,7 @@ class UtilsTest extends TestCase
         $this->assertEquals($expected, Utils::addHtmlClass($existing, $newClass));
     }
 
-    public function addHtmlClassProvider()
+    public static function addHtmlClassProvider()
     {
         return [
             ['', 'active', 'active'],
@@ -51,7 +51,7 @@ class UtilsTest extends TestCase
         );
     }
 
-    public function isAbsoluteUrlProvider()
+    public static function isAbsoluteUrlProvider()
     {
         return [
             ['http://google.com', true],
@@ -79,7 +79,7 @@ class UtilsTest extends TestCase
         $this->assertEquals($expectedHtml, Utils::attrsToHtml($attrs));
     }
 
-    public function attrsToHtmlProvider()
+    public static function attrsToHtmlProvider()
     {
         return [
             [['disabled', 'readonly'], ' disabled readonly'],

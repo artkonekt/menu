@@ -34,7 +34,7 @@ class LinkRouteTest extends TestCase
         $this->assertEquals($expectedUrl, $link->url());
     }
 
-    public function routesResolverProvider()
+    public static function routesResolverProvider()
     {
         return [
             ['user.index', self::APP_URL . '/user'],
