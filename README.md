@@ -62,7 +62,7 @@ A quick and easy way to create menus in [Laravel 9-10](https://laravel.com/)
 composer require konekt/menu
 ```
 
-> This library supports: **Laravel**: 6.x - 9.x, **PHP**: 7.3 - 8.1 
+> This library supports: **Laravel**: 9.x - 10.x, **PHP**: 8.x 
 
 ## Getting Started
 
