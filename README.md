@@ -8,7 +8,7 @@
 [![StyleCI](https://styleci.io/repos/94574866/shield?branch=master)](https://styleci.io/repos/94574866)
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-A quick and easy way to create menus in [Laravel 9-10](https://laravel.com/)
+A quick and easy way to create menus in [Laravel v5.4 - v10](https://laravel.com/)
 
 ## Laravel Compatibility
 
@@ -75,12 +75,9 @@ A quick and easy way to create menus in [Laravel 9-10](https://laravel.com/)
 composer require konekt/menu
 ```
 
-> This library supports: **Laravel**: 6.x - 9.x, **PHP**: 7.3 - 8.1 
-
 ## Getting Started
 
-You can define the menus in a [middleware](http://laravel.com/docs/master/middleware),
-or in a service provider's boot method, so any request hits your
+You can define the menus in a service provider's boot method, so any request hits your
 application, the menu objects will be available.
 
 ### Create A Menu
