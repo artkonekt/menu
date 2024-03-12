@@ -2,7 +2,14 @@
 
 ### Menu Component For Laravel
 
-## 1.X
+## 1.x
+
+### Unreleased
+###### 2024-XX-YY
+
+- Dropped PHP 8.0 support
+- Dropped Laravel 9 support
+- Added Laravel 11 support
 
 ### 1.10.1
 ###### 2023-12-17

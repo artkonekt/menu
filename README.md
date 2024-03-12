@@ -22,8 +22,9 @@ A quick and easy way to create menus in [Laravel v5.4 - v10](https://laravel.com
 | 6.x     | 1.4 - 1.9   |
 | 7.x     | 1.5 - 1.9   |
 | 8.x     | 1.7 - 1.9   |
-| 9.x     | 1.9+        |
+| 9.x     | 1.9 - 1.10  |
 | 10.x    | 1.10+       |
+| 11.x    | 1.11+       |
 
 ## PHP Compatibility
 
@@ -34,7 +35,7 @@ A quick and easy way to create menus in [Laravel v5.4 - v10](https://laravel.com
 | 7.2 | 1.1 - 1.7   |
 | 7.3 | 1.3 - 1.9   |
 | 7.4 | 1.5 - 1.9   |
-| 8.0 | 1.8+        |
+| 8.0 | 1.8 - 1.10  |
 | 8.1 | 1.9+        |
 | 8.2 | 1.10+       |
 | 8.3 | 1.10+       |
