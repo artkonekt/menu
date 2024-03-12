@@ -1,6 +1,6 @@
 {
     "name": "konekt/menu",
-    "description": "Menus in Laravel 9 - 10",
+    "description": "Menus in Laravel 10 - 11",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "dev",
