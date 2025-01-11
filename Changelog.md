@@ -8,6 +8,7 @@
 ###### 2025-XX-YY
 
 - Added PHP 8.4 support
+- Added the `clear()` method to the menu
 
 ### 1.11.0
 ###### 2024-03-12

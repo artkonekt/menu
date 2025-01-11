@@ -118,4 +118,17 @@ class MenuTest extends TestCase
             $this->menu->render('ul')
         );
     }
+
+    public function testItCanDeleteAllMenuItems()
+    {
+        /** @var Menu $menu */
+        $menu = \Menu::create('menu2');
+        $menu->addItem('home', 'Home', '/');
+        $menu->addItem('about', 'About', '/about');
+        $menu->addItem('contact', 'Contact', '/contact');
+
+        $this->assertCount(3, $menu->items);
+        $menu->clear();
+        $this->assertCount(0, $menu->items);
+    }
 }

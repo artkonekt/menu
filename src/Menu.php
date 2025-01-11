@@ -102,6 +102,12 @@ class Menu
         return $this->items->remove($name);
     }
 
+    /** Remove all menu items from the menu */
+    public function clear(): void
+    {
+        $this->items = new ItemCollection();
+    }
+
     /**
      * Returns menu item by name
      *
