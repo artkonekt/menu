@@ -1,6 +1,15 @@
-# Changelog
+# Menu Library Changelog
 
-### Menu Component For Laravel
+## 2.x
+
+### Unreleased
+#### 2025-XX-YY
+
+- Dropped PHP 8.1 Support
+- Dropped Laravel 10 Support
+- Added Laravel 12 Support
+
+---
 
 ## 1.x
 

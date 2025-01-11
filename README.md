@@ -8,7 +8,11 @@
 [![StyleCI](https://styleci.io/repos/94574866/shield?branch=master)](https://styleci.io/repos/94574866)
 [![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-A quick and easy way to create menus in [Laravel v5.4 - v11](https://laravel.com/)
+A quick and easy way to create menus in [Laravel v5.4 - v12](https://laravel.com/)
+
+> [!CAUTION]  
+> You are browsing the development branch (master = 2.0-dev) of this library.  
+> Do not rely on this branch, because it is unstable and is a subject to change!
 
 ## Laravel Compatibility
 
