@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the MenuConfiguration class.
  *
@@ -45,11 +47,11 @@ class MenuConfiguration
 
     private function parseOptions(array $options)
     {
-        $this->autoActivate    = Arr::get($options, 'auto_activate', true);
+        $this->autoActivate = Arr::get($options, 'auto_activate', true);
         $this->activateParents = Arr::get($options, 'activate_parents', true);
-        $this->activeClass     = Arr::get($options, 'active_class', 'active');
-        $this->activeElement   = strtolower(Arr::get($options, 'active_element', 'item'));
-        $this->cascadeData     = Arr::get($options, 'cascade_data', true);
+        $this->activeClass = Arr::get($options, 'active_class', 'active');
+        $this->activeElement = strtolower(Arr::get($options, 'active_element', 'item'));
+        $this->cascadeData = Arr::get($options, 'cascade_data', true);
 
         if (!in_array($this->activeElement, self::ACTIVE_ELEMENT_TYPES)) {
             throw new InvalidMenuConfigurationException(

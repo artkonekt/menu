@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the ActiveItemsCollectionTest class.
  *
@@ -18,6 +20,12 @@ use Konekt\Menu\Tests\TestCase;
 
 class ActiveItemsCollectionTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setupRoutes();
+    }
     /** @test */
     public function has_active_child_returns_false_when_there_are_no_active_items_at_all()
     {
@@ -111,13 +119,6 @@ class ActiveItemsCollectionTest extends TestCase
         $parent2->addSubItem('parent2-child-b', 'Child B', ['url' => '/parent-2/child-b']);
 
         $this->assertTrue($parent1->hasActiveChild());
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->setupRoutes();
     }
 
     private function setupRoutes()

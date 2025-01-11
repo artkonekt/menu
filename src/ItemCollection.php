@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Menu Item Collection class.
  *
@@ -16,6 +18,27 @@ use Konekt\Menu\Exceptions\DuplicateItemNameException;
 
 class ItemCollection extends Collection
 {
+    /**
+     * Search the items based on an attribute
+     *
+     * @param string $method
+     * @param array  $args
+     *
+     * @return \Konekt\Menu\ItemCollection
+     */
+    public function __call($method, $args)
+    {
+        preg_match('/^[W|w]here([a-zA-Z0-9_]+)$/', $method, $matches);
+
+        if (!$matches) {
+            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $method . '()', E_USER_ERROR);
+        }
+
+        $attribute = strtolower($matches[1]);
+        $value = $args ? $args[0] : null;
+
+        return $this->filterByProperty($attribute, $value);
+    }
     /**
      * Alias to addItem. Needed for Laravel 5.8 compatibility
      * @see https://github.com/artkonekt/menu/issues/3
@@ -181,28 +204,6 @@ class ItemCollection extends Collection
         return $this->filter(function ($item) {
             return $item->hasParent();
         });
-    }
-
-    /**
-     * Search the items based on an attribute
-     *
-     * @param string $method
-     * @param array  $args
-     *
-     * @return \Konekt\Menu\ItemCollection
-     */
-    public function __call($method, $args)
-    {
-        preg_match('/^[W|w]here([a-zA-Z0-9_]+)$/', $method, $matches);
-
-        if (!$matches) {
-            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $method . '()', E_USER_ERROR);
-        }
-
-        $attribute = strtolower($matches[1]);
-        $value     = $args ? $args[0] : null;
-
-        return $this->filterByProperty($attribute, $value);
     }
 
     /**

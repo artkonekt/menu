@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the CustomRendererTest class.
  *
@@ -24,7 +26,7 @@ class CustomRendererTest extends TestCase
 
         $menu = Menu::create('bulma', [
             'active_element' => 'link',
-            'active_class'   => 'is-active'
+            'active_class' => 'is-active'
         ]);
 
         $menu->addItem('dashboard', 'Dashboard', '/dashboard');
