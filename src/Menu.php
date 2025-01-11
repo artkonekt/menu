@@ -54,16 +54,7 @@ class Menu
         $this->name = $name;
         $this->config = $config;
         $this->items = new ItemCollection();
-    }
-
-    /**
-     * Returns menu item by name
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function __get($prop)
-    {
-        return $this->items->get($prop);
+        $this->attributes = new HtmlTagAttributes();
     }
 
     /**
@@ -84,12 +75,7 @@ class Menu
         return $item;
     }
 
-    /**
-     * Returns menu item by name
-     *
-     * @return Item
-     */
-    public function getItem($name)
+    public function getItem(string $name): ?Item
     {
         return $this->items->get($name);
     }
@@ -102,13 +88,13 @@ class Menu
      *
      * @return bool Returns true if item(s) was/were removed, false if failed
      */
-    public function removeItem(string $name, $removeChildren = true)
+    public function removeItem(string $name, bool $removeChildren = true)
     {
         if ($removeChildren) {
             if ($item = $this->getItem($name)) {
-                $item->children()->each(function ($item) {
-                    $this->removeItem($item->name);
-                });
+                foreach ($item->children() as $key => $child) {
+                    $this->removeItem($key);
+                }
             }
         }
 

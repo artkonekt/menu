@@ -14,36 +14,49 @@ declare(strict_types=1);
 
 namespace Konekt\Menu;
 
-use Illuminate\Support\Collection;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use Konekt\Extend\TypedDictionary;
 use Konekt\Menu\Exceptions\DuplicateItemNameException;
+use Traversable;
 
-class ItemCollection extends Collection
+class ItemCollection implements Countable, IteratorAggregate
 {
+    protected TypedDictionary $items;
+
     /**
-     * Search the items based on an attribute
-     *
-     * @param string $method
-     * @param array  $args
-     *
-     * @return \Konekt\Menu\ItemCollection
+     * @param Item[] $items
      */
-    public function __call($method, $args)
+    public function __construct(array $items = [])
     {
-        preg_match('/^[W|w]here([a-zA-Z0-9_]+)$/', $method, $matches);
-
-        if (!$matches) {
-            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $method . '()', E_USER_ERROR);
+        $this->items = TypedDictionary::ofClass(Item::class);
+        if (!empty($items)) {
+            $this->items->push(
+                array_combine(
+                    array_map(fn($item) => $item->name, $items),
+                    $items,
+                )
+            );
         }
-
-        $attribute = strtolower($matches[1]);
-        $value = $args ? $args[0] : null;
-
-        return $this->filterByProperty($attribute, $value);
     }
+
+    public function where(string $name, mixed $value): ItemCollection
+    {
+        return $this->filter(fn (Item $item) => $value === $item->data->get($name));
+    }
+
+    public function whereAttribute(string $name, mixed $value): ItemCollection
+    {
+        return $this->filter(fn (Item $item) => $value === $item->attributes->get($name));
+    }
+
     /**
      * Alias to addItem. Needed for Laravel 5.8 compatibility
      * @see https://github.com/artkonekt/menu/issues/3
      * @see https://github.com/laravel/framework/pull/27082
+     *
+     * @note 2025-01-11 It's not clear why is this still needed, but I keep it as is in v2 as well
      *
      * @param mixed $item
      *
@@ -58,24 +71,60 @@ class ItemCollection extends Collection
     /**
      * Add new Item to the collection. Performs check for name uniqueness
      *
-     * @param Item $item
-     *
-     * @return $this
      * @throws DuplicateItemNameException
      */
-    public function addItem(Item $item)
+    public function addItem(Item $item): self
     {
-        if ($this->has($item->name)) {
+        if ($this->items->has($item->name)) {
             throw new DuplicateItemNameException(
                 sprintf(
                     'An item with name `%s` already exists in the menu `%s`',
                     $item->name,
-                    $item->menu->name
+                    $item->getMenu()->name
                 )
             );
         }
 
-        return $this->put($item->name, $item);
+        $this->items->set($item->name, $item);
+
+        return $this;
+    }
+
+    public function has(string $name): bool
+    {
+        return $this->items->has($name);
+    }
+
+    public function get(string $name): ?Item
+    {
+        return $this->items->get($name);
+    }
+
+    public function count(): int
+    {
+        return $this->items->count();
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->items->count() === 0;
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
+    public function filter(?callable $callback = null): self
+    {
+        return new static(
+            $this->items->filter($callback)->all()
+        );
+    }
+
+    public function toArray(): array
+    {
+        return $this->items->toArray();
     }
 
     /**
@@ -85,12 +134,13 @@ class ItemCollection extends Collection
      *
      * @return bool Returns true if the element has been removed, false otherwise
      */
-    public function remove($item)
+    public function remove(Item|string $item): bool
     {
         $key = $item instanceof Item ? $item->name : $item;
 
-        if ($this->has($key)) {
-            $this->forget($key);
+        if ($this->items->has($key)) {
+            $this->items->remove($key);
+
             return true;
         }
 
@@ -98,132 +148,77 @@ class ItemCollection extends Collection
     }
 
     /**
-     * Add attributes to a collection of items
-     *
-     * @return ItemCollection
+     * Set an attribute on each item in the collection
      */
-    public function attr(...$args)
+    public function setAttribute(string $name, mixed $value): self
     {
-        $this->each(function ($item) use ($args) {
-            $item->attr(...$args);
-        });
+        /** @var Item $item */
+        foreach ($this->items as $item) {
+            $item->attributes->set($name, $value);
+        }
 
         return $this;
     }
 
     /**
-     * Add meta data to a collection of items
-     *
-     * @param array $args
-     *
-     * @return ItemCollection
+     * Set metadata on each item in the collection
      */
-    public function data(...$args)
+    public function setData(string $key, mixed $value): self
     {
-        $this->each(function ($item) use ($args) {
-            $item->data(...$args);
-        });
+        /** @var Item $item */
+        foreach ($this->items as $item) {
+            $item->data->set($key, $value);
+        }
 
         return $this;
     }
 
     /**
-     * Appends text or HTML to a collection of items
-     *
-     * @param  string
-     *
-     * @return ItemCollection
+     * Appends text or HTML to the title of each item in the collection
      */
-    public function appendHtml($html)
+    public function appendHtml(string $html): self
     {
-        $this->each(function ($item) use ($html) {
+        foreach ($this->items as $item) {
             $item->title .= $html;
-        });
+        }
 
         return $this;
     }
 
     /**
-     * Prepends text or HTML to a collection of items
-     *
-     * @param string $html
-     *
-     * @return ItemCollection
+     * Prepends text or HTML to the title of each item in the collection
      */
-    public function prependHtml($html)
+    public function prependHtml(string $html): self
     {
-        $this->each(function ($item) use ($html) {
+        foreach ($this->items as $item) {
             $item->title = $html . $item->title;
-        });
+        }
 
         return $this;
     }
 
-    /**
-     * Returns items with no parent
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function roots()
+    public function roots(): static
     {
-        return $this->filter(function ($item) {
-            return !$item->hasParent();
-        });
+        return $this->filter(fn (Item $item) => !$item->hasParent());
     }
 
-    /**
-     * Returns active items
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function actives()
+    public function actives(): static
     {
-        return $this->filter(function (Item $item) {
-            return $item->isItemOrLinkActive();
-        });
+        return $this->filter(fn (Item $item) => $item->isItemOrLinkActive());
     }
 
-    /**
-     * Returns the items who have children
-     *
-     * @return static
-     */
-    public function haveChild()
+    public function havingChildren(): static
     {
-        return $this->filter(function ($item) {
-            return $item->hasChildren();
-        });
+        return $this->filter(fn (Item $item) => $item->hasChildren());
     }
 
-    /**
-     * Returns the items who have parent
-     *
-     * @return static
-     */
-    public function haveParent()
+    public function havingParent(): static
     {
-        return $this->filter(function ($item) {
-            return $item->hasParent();
-        });
+        return $this->filter(fn (Item $item) => $item->hasParent());
     }
 
-    /**
-     * @param      $property
-     * @param      $value
-     *
-     * @return static
-     */
-    protected function filterByProperty($property, $value)
+    public function getIterator(): Traversable
     {
-        return $this->filter(function ($item) use ($property, $value) {
-            if ($item->hasProperty($property)) {
-                return
-                    $item->attr($property) == $value
-                    ||
-                    $item->data($property) == $value;
-            }
-
-            return false;
-        })->keyBy('name');
+        return new ArrayIterator($this->items->toArray());
     }
 }

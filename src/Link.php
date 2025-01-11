@@ -21,17 +21,13 @@ class Link
 {
     use HasAttributes;
 
-    /** @var bool   Flag for active state */
-    public $isActive = false;
+    public bool $isActive = false;
 
-    /** @var array  Path Information */
-    protected $path = [];
+    protected array $path = [];
 
-    /** @var  string */
-    protected $activeClass;
+    protected string $activeClass;
 
-    /** @var string Explicit href for the link */
-    protected $href;
+    protected ?string $href = null;
 
     /**
      * Class constructor
@@ -39,35 +35,14 @@ class Link
      * @param  array $path
      * @param string $activeClass
      */
-    public function __construct($path = [], $activeClass = 'active')
+    public function __construct(array $path = [], string $activeClass = 'active')
     {
         $this->path = $path;
         $this->activeClass = $activeClass;
+        $this->attributes = new HtmlTagAttributes();
     }
 
-    /**
-     * Check for a method of the same name if the attribute doesn't exist.
-     *
-     * @param  string $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->attr($property);
-    }
-
-    public function __set($property, $value)
-    {
-        return $this->attr($property, $value);
-    }
-
-    /**
-     * Make the anchor active
-     *
-     * @return static
-     */
-    public function activate()
+    public function activate(): self
     {
         $this->isActive = true;
         $this->attributes['class'] = Utils::addHtmlClass(
@@ -78,14 +53,7 @@ class Link
         return $this;
     }
 
-    /**
-     * Set Anchor's href property
-     *
-     * @param $href
-     *
-     * @return static
-     */
-    public function href($href)
+    public function setHref(string $href): self
     {
         $this->href = $href;
 
@@ -94,12 +62,10 @@ class Link
 
     /**
      * Return the URL for the link
-     *
-     * @return string|null
      */
-    public function url()
+    public function url(): ?string
     {
-        if (!is_null($this->href)) {
+        if (null !== $this->href) {
             return $this->href;
         } elseif (isset($this->path['url'])) {
             return $this->getUrl();
@@ -112,12 +78,7 @@ class Link
         return null;
     }
 
-    /**
-     * Get the action for "url" option.
-     *
-     * @return string
-     */
-    protected function getUrl()
+    protected function getUrl(): string
     {
         $url = $this->path['url'];
 
@@ -131,12 +92,7 @@ class Link
         return url($uri, $params);
     }
 
-    /**
-     * Get the url for a "route" option.
-     *
-     * @return string
-     */
-    protected function getRoute()
+    protected function getRoute(): string
     {
         $route = $this->path['route'];
         if (is_array($route)) {
@@ -146,12 +102,7 @@ class Link
         return route($route);
     }
 
-    /**
-     * Get the url for an "action" option
-     *
-     * @return string
-     */
-    protected function getControllerAction()
+    protected function getControllerAction(): string
     {
         $action = $this->path['action'];
         if (is_array($action)) {

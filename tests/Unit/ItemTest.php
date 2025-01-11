@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * Contains the ItemTest class.
  *
@@ -14,7 +15,9 @@ declare(strict_types=1);
 namespace Konekt\Menu\Tests\Unit;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Konekt\Menu\Exceptions\MenuItemNotFoundException;
+use Konekt\Menu\Facades\Menus;
 use Konekt\Menu\Menu;
 use Konekt\Menu\Tests\TestCase;
 
@@ -23,32 +26,22 @@ class ItemTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        \Route::get('/articles/{slug}', function ($slug) {
-            return 'Hello, ' . $slug;
-        });
 
-        \Route::get('/about', function () {
-            return 'About Us';
-        });
+        Route::get('/articles/{slug}', fn ($slug) => 'Hello, ' . $slug);
+        Route::get('/about', fn () => 'About Us');
     }
+
     public function testItemParentCanBeResolvedProperly()
     {
-        $menu = \Menu::create('uberGigaMenu');
+        $menu = Menus::create('uberGigaMenu');
+        $about = $menu->addItem('about', 'About', '/about');
 
-        $menu->addItem('about', 'About', '/about');
+        $this->assertEquals($about, $about->addSubItem('who-we-are', 'Who We are', '/who-we-are')->parent);
 
-        $this->assertEquals(
-            $menu->about,
-            $menu->about->addSubItem('who-we-are', 'Who We are', '/who-we-are')->parent
-        );
+        $this->assertEquals($about, $menu->getItem('about')->addSubItem('what-we-do', 'What We Do', '/what-we-do')->parent);
 
         $this->assertEquals(
-            $menu->about,
-            $menu->getItem('about')->addSubItem('what-we-do', 'What We Do', '/what-we-do')->parent
-        );
-
-        $this->assertEquals(
-            $menu->about,
+            $about,
             $menu->addItem('our-goals', 'Our Goals', [
                 'parent' => 'about',
                 'url' => '/our-goals'
@@ -58,76 +51,79 @@ class ItemTest extends TestCase
 
     public function testInvalidParentThrowsException()
     {
-        $menu = \Menu::create('whoaa');
+        $menu = Menus::create('whoaa');
         $this->expectException(MenuItemNotFoundException::class);
         $menu->addItem('shh', 'Shh', ['parent' => 'inexistent']);
     }
 
     public function testOnlyItemGetsActivatedIfActiveElementIsItem()
     {
-        $menu = \Menu::create('main', ['active_element' => 'item']);
-        $menu->addItem('home', 'Home', '/');
+        $menu = Menus::create('main', ['active_element' => 'item']);
+        $home = $menu->addItem('home', 'Home', '/');
 
-        $this->assertTrue($menu->home->isActive);
-        $this->assertFalse($menu->home->link->isActive);
+        $this->assertTrue($home->isActive);
+        $this->assertFalse($home->link->isActive);
 
-        $menu->addItem('about', 'About', '/about')->activate();
-        $this->assertTrue($menu->about->isActive);
-        $this->assertFalse($menu->about->link->isActive);
+        $about = $menu->addItem('about', 'About', '/about');
+        $about->activate();
+        $this->assertTrue($about->isActive);
+        $this->assertFalse($about->link->isActive);
     }
 
     public function testOnlyLinkGetsActivatedIfActiveElementIsLink()
     {
-        $menu = \Menu::create('main', ['active_element' => 'link']);
-        $menu->addItem('home', 'Home', '/');
+        $menu = Menus::create('main', ['active_element' => 'link']);
+        $home = $menu->addItem('home', 'Home', '/');
 
-        $this->assertFalse($menu->home->isActive);
-        $this->assertTrue($menu->home->link->isActive);
+        $this->assertFalse($home->isActive);
+        $this->assertTrue($home->link->isActive);
 
-        $menu->addItem('about', 'About', '/about')->activate();
-        $this->assertFalse($menu->about->isActive);
-        $this->assertTrue($menu->about->link->isActive);
+        $about = $menu->addItem('about', 'About', '/about');
+        $about->activate();
+
+        $this->assertFalse($about->isActive);
+        $this->assertTrue($about->link->isActive);
     }
 
     public function testItemActivatesOnSimpleUrl()
     {
         /** @var Menu $menu */
-        $menu = \Menu::create('main');
+        $menu = Menus::create('main');
 
         $this->app['request'] = $this->mockRequest('about');
         $menu->addItem('home', 'Home', '/');
         $menu->addItem('about', 'About', '/about');
 
-        $this->assertTrue($menu->about->isActive);
-        $this->assertFalse($menu->home->isActive);
+        $this->assertTrue($menu->getItem('about')->isActive);
+        $this->assertFalse($menu->getItem('home')->isActive);
     }
 
     public function testItemActivatesOnUrlPattern()
     {
         /** @var Menu $menu */
-        $menu = \Menu::create('main');
+        $menu = Menus::create('main');
 
         $this->app['request'] = $this->mockRequest('article/how-to-buy-a-sandwich');
         $menu->addItem('home', 'Home', '/');
         $menu->addItem('about', 'About', '/about');
         $menu->addItem('articles', 'Articles', '/articles')->activateOnUrls('/article/*');
 
-        $this->assertFalse($menu->about->isActive);
-        $this->assertFalse($menu->home->isActive);
-        $this->assertTrue($menu->articles->isActive);
+        $this->assertFalse($menu->getItem('about')->isActive);
+        $this->assertFalse($menu->getItem('home')->isActive);
+        $this->assertTrue($menu->getItem('articles')->isActive);
     }
 
     public function testItemActivatesOnSelfUrlEvenIfPatternWasSet()
     {
         /** @var Menu $menu */
-        $menu = \Menu::create('main');
+        $menu = Menus::create('main');
 
         $this->app['request'] = $this->mockRequest('articles');
         $menu->addItem('home', 'Home', '/');
         $menu->addItem('about', 'About', '/about');
         $menu->addItem('articles', 'Articles', '/articles')->activateOnUrls('/article/*');
 
-        $this->assertTrue($menu->articles->isActive);
+        $this->assertTrue($menu->getItem('articles')->isActive);
     }
 
     /**

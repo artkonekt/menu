@@ -18,15 +18,9 @@ use Illuminate\Support\Str;
 
 trait Renderable
 {
-    /** @var string|null    The name of the renderer */
-    public $renderer;
+    public ?string $renderer = null;
 
-    /**
-     * @param string $rendererName
-     *
-     * @return string
-     */
-    public function render(string $rendererName = null)
+    public function render(?string $rendererName = null)
     {
         $renderer = app(sprintf(
             'konekt.menu.renderer.%s.%s',

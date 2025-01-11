@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Konekt\Menu\Tests\Feature;
 
 use Illuminate\Support\Str;
+use Konekt\Menu\Facades\Menus;
 use Konekt\Menu\Tests\Feature\Renderer\BulmaMenuRenderer;
 use Konekt\Menu\Tests\TestCase;
 use Menu;
@@ -24,7 +25,7 @@ class CustomRendererTest extends TestCase
     {
         $this->app->singleton('konekt.menu.renderer.menu.bulma', BulmaMenuRenderer::class);
 
-        $menu = Menu::create('bulma', [
+        $menu = Menus::create('bulma', [
             'active_element' => 'link',
             'active_class' => 'is-active'
         ]);
@@ -32,9 +33,9 @@ class CustomRendererTest extends TestCase
         $menu->addItem('dashboard', 'Dashboard', '/dashboard');
         $menu->addItem('customers', 'Customers', '/customers');
         $menu->addItem('team', 'Team', '#')->activate();
-        $menu->team->addSubItem('members', 'Members', '/team/members');
-        $menu->team->addSubItem('plugins', 'Plugins', '/team/plugins');
-        $menu->team->plugins->addSubItem('addNewPlugin', 'Add New Plugin', '/team/plugins/new');
+        $menu->getItem('team')->addSubItem('members', 'Members', '/team/members');
+        $menu->getItem('team')->addSubItem('plugins', 'Plugins', '/team/plugins');
+        $menu->getItem('team')->getChildItem('plugins')->addSubItem('addNewPlugin', 'Add New Plugin', '/team/plugins/new');
 
         $html = $menu->render('bulma');
 

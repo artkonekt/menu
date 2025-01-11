@@ -21,38 +21,33 @@ class MenuConfiguration
 {
     public const ACTIVE_ELEMENT_TYPES = ['item', 'link'];
 
-    /** @var bool   Whether to auto activate items based on routes. True by default */
-    public $autoActivate;
+    /** Whether to auto activate items based on routes */
+    public bool $autoActivate = true;
 
-    /** @var bool   Whether to activate item's parents as well. True by default */
-    public $activateParents;
+    /** Whether to activate item's parents as well */
+    public bool $activateParents = true;
 
-    /** @var string CSS class name to add on active elements. 'active' by default */
-    public $activeClass;
+    /** CSS class name to add on active elements. 'active' by default */
+    public string $activeClass = 'active';
 
-    /** @var string 'item'|'link': Whether the active element is the item (eg. <li>) or the link (<a>). 'link' by default */
-    public $activeElement;
+    /** 'item' or 'link': Whether the active element is the item (eg. <li>) or the link (<a>). 'link' by default */
+    public string $activeElement = 'link';
 
-    /** @var bool Whether to cascade data to child elements. True by default */
-    public $cascadeData;
+    /** Whether to automatically copy metadata to child elements. False by default */
+    public bool $cascadeData = false;
 
-    /**
-     * MenuConfiguration constructor.
-     *
-     * @param array $options
-     */
     public function __construct(array $options = [])
     {
         $this->parseOptions($options);
     }
 
-    private function parseOptions(array $options)
+    private function parseOptions(array $options): void
     {
         $this->autoActivate = Arr::get($options, 'auto_activate', true);
         $this->activateParents = Arr::get($options, 'activate_parents', true);
         $this->activeClass = Arr::get($options, 'active_class', 'active');
         $this->activeElement = strtolower(Arr::get($options, 'active_element', 'item'));
-        $this->cascadeData = Arr::get($options, 'cascade_data', true);
+        $this->cascadeData = Arr::get($options, 'cascade_data', false);
 
         if (!in_array($this->activeElement, self::ACTIVE_ELEMENT_TYPES)) {
             throw new InvalidMenuConfigurationException(

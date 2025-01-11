@@ -37,7 +37,7 @@ class MenuConfigurationTest extends TestCase
 
         $this->assertTrue($config->autoActivate);
         $this->assertTrue($config->activateParents);
-        $this->assertTrue($config->cascadeData);
+        $this->assertFalse($config->cascadeData);
         $this->assertEquals('item', $config->activeElement);
         $this->assertEquals('active', $config->activeClass);
     }

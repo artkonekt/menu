@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Konekt\Menu;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Konekt\Menu\Renderers\DivItemRenderer;
 use Konekt\Menu\Renderers\DivMenuRenderer;
@@ -21,21 +22,9 @@ use Konekt\Menu\Renderers\LiItemRenderer;
 use Konekt\Menu\Renderers\OlMenuRenderer;
 use Konekt\Menu\Renderers\UlMenuRenderer;
 
-class MenuServiceProvider extends ServiceProvider
+class MenuServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('menu', function ($app) {
             return new Repository();
@@ -48,11 +37,6 @@ class MenuServiceProvider extends ServiceProvider
         $this->app->singleton('konekt.menu.renderer.item.div', DivItemRenderer::class);
     }
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
     public function provides()
     {
         return ['menu'];

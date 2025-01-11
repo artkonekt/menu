@@ -39,22 +39,22 @@ class LinkTest extends TestCase
     public function testActivateWithExistingClasses()
     {
         $link = new Link();
-        $link->attr('class', 'primary');
+        $link->attributes->set('class', 'primary');
         $link->activate();
 
-        $this->assertEquals('primary active', $link->class);
+        $this->assertEquals('primary active', $link->attributes->get('class'));
         $this->assertTrue($link->isActive);
     }
 
     public function testHrefProperty()
     {
         $link = new Link();
-        $link->href('/#/about');
+        $link->setHref('/#/about');
 
         $this->assertEquals('/#/about', $link->url());
     }
 
-    public function testAttrMethod()
+    public function testTheDeprecatedAttrMethod()
     {
         $link = new Link();
 
@@ -65,25 +65,5 @@ class LinkTest extends TestCase
         $this->assertNull($link->attr('kaboom'));
         $link->attr(['kaboom' => 'crackle']);
         $this->assertEquals('crackle', $link->attr('kaboom'));
-    }
-
-    public function testDynamicPropertiesCanBeRead()
-    {
-        $link = new Link();
-
-        $link->attr('kaboom', 'Borland Delphi');
-        $this->assertEquals('Borland Delphi', $link->kaboom);
-    }
-
-    public function testDynamicPropertiesCanAlsoBeWritten()
-    {
-        $link = new Link();
-
-        $link->attr('zoink', 'Krakow');
-        $this->assertEquals('Krakow', $link->zoink);
-
-        $link->zoink = 'Warsaw';
-        $this->assertEquals('Warsaw', $link->zoink);
-        $this->assertEquals('Warsaw', $link->attr('zoink'));
     }
 }

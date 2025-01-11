@@ -23,13 +23,8 @@ class Utils
      *  - addHtmlClass('nav-link active', 'active') -> 'nav-link active' // smart, eh?
      *  - addHtmlClass('active', 'active') -> 'active' // no duplicates
      *  - addHtmlClass('active active', 'active') -> 'active' // it even heals duplicates
-     *
-     * @param $existingClasses
-     * @param $classToAdd
-     *
-     * @return mixed|string
      */
-    public static function addHtmlClass($existingClasses, $classToAdd)
+    public static function addHtmlClass(?string $existingClasses, string $classToAdd): string
     {
         if (empty($existingClasses)) {
             return $classToAdd;
@@ -40,27 +35,16 @@ class Utils
         return implode(' ', array_unique(explode(' ', $classes)));
     }
 
-    /**
-     * Returns whether the given url is an absolute one
-     *
-     * @param $url
-     *
-     * @return bool
-     */
-    public static function isAbsoluteUrl($url)
+    public static function isAbsoluteUrl(string $url): bool
     {
-        return parse_url($url, PHP_URL_HOST) ? true : false;
+        return (bool) parse_url($url, PHP_URL_HOST);
     }
 
     /**
      * Converts attributes to html string.
      * Eg.: ['disabled', ['src' => 'img.png']] -> ' disabled src="img.png"'
-     *
-     * @param array $attributes
-     *
-     * @return string
      */
-    public static function attrsToHtml(array $attributes)
+    public static function attrsToHtml(array $attributes): string
     {
         $attrs = [];
 

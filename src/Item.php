@@ -17,61 +17,48 @@ namespace Konekt\Menu;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+use Konekt\Extend\Dictionary;
 use Konekt\Menu\Exceptions\MenuItemNotFoundException;
 use Konekt\Menu\Traits\HasAttributes;
 use Konekt\Menu\Traits\Renderable;
-use Request;
 
 class Item
 {
     use HasAttributes;
     use Renderable;
 
-    /** @var string The name (or id) of the menu item */
-    public $name;
+    /** The name (or id) of the menu item */
+    public readonly string $name;
 
-    /** @var string */
-    public $title;
+    public string $title;
 
-    /** @var Item   Parent item, if any */
-    public $parent;
+    public ?Item $parent = null;
 
-    /** @var bool   Flag for active state */
-    public $isActive = false;
+    public bool $isActive = false;
 
-    /** @var Link|null */
-    public $link;
+    public ?Link $link = null;
 
-    /** @var array  Extra information attached to the menu item */
-    protected $data = [];
+    /** Extra information attached to the menu item */
+    public Dictionary $data;
 
-    /** @var Menu   Reference to the menu holding the item */
-    protected $menu;
+    protected Menu $menu;
 
-    /** @var array Stack of authorizations */
-    protected $authorizationStack = [];
+    protected array $authorizationStack = [];
 
-    /** @var string URL pattern to match (if no exact match) */
-    private $activeUrlPattern;
+    private ?string $activeUrlPattern = null;
 
-    private $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'renderer'];
+    private static array $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'renderer'];
 
-    /**
-     * Class constructor
-     *
-     * @param  Menu   $menu
-     * @param  string $name
-     * @param  string $title
-     * @param  array  $options
-     */
-    public function __construct(Menu $menu, $name, $title, $options)
+    public function __construct(Menu $menu, string $name, string $title, array $options = [])
     {
         $this->menu = $menu;
         $this->name = $name;
         $this->title = $title;
-        $this->attributes = Arr::except($options, $this->reserved);
-        $this->parent = $this->resolveParent(Arr::get($options, 'parent', null));
-        $this->renderer = Arr::get($options, 'renderer', null);
+        $this->attributes = new HtmlTagAttributes(Arr::except($options, self::$reserved));
+        $this->data = new Dictionary();
+        $this->parent = $this->resolveParent(Arr::get($options, 'parent'));
+        $this->renderer = Arr::get($options, 'renderer');
 
         $path = Arr::only($options, ['url', 'route', 'action']);
         if (!empty($path)) {
@@ -81,90 +68,59 @@ class Item
         $this->checkActivation();
     }
 
-    /**
-     * Search in meta data if a property doesn't exist otherwise return the property
-     *
-     * @param  string
-     *
-     * @return string
-     */
-    public function __get($prop)
+    public function getMenu(): Menu
     {
-        if (property_exists($this, $prop)) {
-            return $this->$prop;
-        }
-
-        if ($this->children()->has($prop)) {
-            return $this->children()->get($prop);
-        }
-
-        return $this->data($prop);
+        return $this->menu;
     }
 
-    /**
-     * Creates a sub Item
-     *
-     * @param  string       $name
-     * @param  string       $title
-     * @param  string|array $options
-     *
-     * @return Item
-     */
-    public function addSubItem($name, $title, $options = [])
+    public function addSubItem(string $name, string $title, string|array $optionsOrUrl = []): Item
     {
-        $options = is_array($options) ? $options : ['url' => $options];
+        $options = is_array($optionsOrUrl) ? $optionsOrUrl : ['url' => $optionsOrUrl];
         $options['parent'] = $this;
 
         return $this->menu->addItem($name, $title, $options);
     }
 
-    /**
-     * Generate URL for link
-     *
-     * @return string|null
-     */
-    public function url()
+    public function url(): ?string
     {
-        if (!$this->link) {
-            return null;
-        }
-
-        return $this->link->url();
+        return $this->link?->url();
     }
 
     /**
      * Adds an authorization condition that will be checked against $user->can($permission)
-     * @see self::isAllowed
      *
-     * @param string $permission
+     * @see self::isAllowed
      */
-    public function allowIfUserCan(string $permission)
+    public function allowIfUserCan(string $permission): self
     {
         $this->authorizationStack[] = $permission;
+
+        return $this;
     }
 
     /**
      * Adds an authorization condition callback.
      * The (current) user will be passed as first argument to the callback during isAllowed()
-     * @see self::isAllowed
      *
-     * @param callable $permissionChecker
+     * @see self::isAllowed
      */
-    public function allowIf(callable $permissionChecker)
+    public function allowIf(callable $permissionChecker): self
     {
         $this->authorizationStack[] = $permissionChecker;
+
+        return $this;
     }
 
     /**
      * Returns whether the menu item is allowed for the user
      *
-     * @param Authenticatable $user In case no user is passed Auth::user() will be used
+     * @param ?Authenticatable $user In case no user is passed, then Auth::user() will be used
      *
      * @return bool
      */
-    public function isAllowed(Authenticatable $user = null): bool
+    public function isAllowed(?Authenticatable $user = null): bool
     {
-        $user = $user ?: Auth::user();
+        $user ??= Auth::user();
 
         foreach ($this->authorizationStack as $auth) {
             if (is_callable($auth)) {
@@ -179,96 +135,63 @@ class Item
         return true;
     }
 
-    /**
-     * Prepends text or html to the item
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function prepend($html)
+    public function prepend(string $html): self
     {
         $this->title = $html . $this->title;
 
         return $this;
     }
 
-    /**
-     * Appends text or html to the item
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function append($html)
+    public function append(string $html): self
     {
         $this->title .= $html;
 
         return $this;
     }
 
-    /**
-     * Returns whether the item has any children
-     *
-     * @return boolean
-     */
-    public function hasChildren()
+    public function hasChild(string $name): bool
     {
-        return (bool) $this->children()->count();
+        return $this->children()->has($name);
     }
 
-    /**
-     * Returns true if either the item or its link is active
-     *
-     * @return bool
-     */
+    public function getChildItem(string $name): ?Item
+    {
+        return $this->children()->get($name);
+    }
+
+    public function hasChildren(): bool
+    {
+        return $this->children()->isNotEmpty();
+    }
+
     public function isItemOrLinkActive(): bool
     {
-        return $this->isActive || ($this->hasLink() && $this->link->isActive);
+        return $this->isActive || $this->link?->isActive;
     }
 
-    /**
-     * Returns true if any of the children is actie
-     */
     public function hasActiveChild(): bool
     {
-        return (bool) $this->children()->actives()->count();
+        return $this->children()->actives()->isNotEmpty();
     }
 
-    /**
-     * Returns children of the item
-     *
-     * @return \Konekt\Menu\ItemCollection
-     */
-    public function children()
+    public function children(): ItemCollection
     {
         return $this->menu->items->filter(function ($item) {
             return $item->hasParent() && $item->parent->name == $this->name;
         });
     }
 
-    /**
-     * Returns allowed children of the item
-     *
-     * @return \Konekt\Menu\ItemCollection
-     */
-    public function childrenAllowed(Authenticatable $user = null)
+    public function childrenAllowed(?Authenticatable $user = null): ItemCollection
     {
-        return $this->children()->filter(function ($item) use ($user) {
-            return $item->isAllowed($user);
-        });
+        return $this->children()->filter(fn (Item $item) => $item->isAllowed($user));
     }
 
-    /**
-     * Returns whether the item has a parent
-     *
-     * @return bool
-     */
-    public function hasParent()
+    public function hasParent(): bool
     {
-        return (bool) $this->parent;
+        return null !== $this->parent;
     }
 
-    /**
-     * Sets the item as active
-     */
-    public function activate()
+    public function activate(): void
     {
         if ('item' == $this->menu->config->activeElement) {
             $this->setToActive();
@@ -291,10 +214,8 @@ class Item
      * Sets the url pattern that if matched, sets the link to active
      *
      * @param string $pattern   Eg.: 'articles/*
-     *
-     * @return $this
      */
-    public function activateOnUrls($pattern)
+    public function activateOnUrls(string $pattern): self
     {
         $this->activeUrlPattern = $pattern;
         $this->checkActivation();
@@ -305,6 +226,8 @@ class Item
     /**
      * Set or get items's meta data
      *
+     * @deprecated Use the withData, pushData, $data->toArray() and $data->get() methods instead
+     *
      * @param array $args
      *
      * @return mixed
@@ -312,7 +235,7 @@ class Item
     public function data(...$args)
     {
         if (isset($args[0]) && is_array($args[0])) {
-            $this->data = array_merge($this->data, array_change_key_case($args[0]));
+            $this->data->push(array_change_key_case($args[0]));
 
             // Cascade data to item's children if cascade_data option is enabled
             if ($this->menu->config->cascadeData) {
@@ -320,52 +243,52 @@ class Item
             }
             return $this;
         } elseif (isset($args[0]) && isset($args[1])) {
-            $this->data[strtolower($args[0])] = $args[1];
+            $this->data->set($args[0], $args[1]);
 
             // Cascade data to item's children if cascade_data option is enabled
             if ($this->menu->config->cascadeData) {
                 $this->cascadeData(...$args);
             }
+
             return $this;
         } elseif (isset($args[0])) {
-            return isset($this->data[$args[0]]) ? $this->data[$args[0]] : null;
+            return $this->data->get($args[0]);
         }
 
-        return $this->data;
+        return $this->data->toArray();
     }
 
-    /**
-     * Returns whether metadata with given key exists
-     *
-     * @param $key
-     *
-     * @return bool
-     */
-    public function hasData($key)
+    public function withData(string $key, mixed $value): self
     {
-        return array_key_exists($key, $this->data);
-    }
+        $this->data->set(strtolower($key), $value);
 
-    /**
-     * Returns whether the item has a link
-     *
-     * @return bool
-     */
-    public function hasLink()
-    {
-        return (bool) $this->link;
-    }
-
-    /**
-     * Cascade data to children
-     *
-     * @param  array $args
-     */
-    public function cascadeData(...$args)
-    {
-        if ($this->hasChildren()) {
-            $this->children()->data(...$args);
+        // Cascade data to item's children if cascade_data option is enabled
+        if ($this->menu->config->cascadeData && $this->hasChildren()) {
+            $this->children()->each(fn (Item $child) => $child->withData($key, $value));
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $assocArrayOfData
+     */
+    public function pushData(array $assocArrayOfData): self
+    {
+        if (!Arr::isAssoc($assocArrayOfData)) {
+            throw new \InvalidArgumentException('Data passed to Item::pushData must be an associative array.');
+        }
+
+        foreach ($assocArrayOfData as $key => $value) {
+            $this->withData($key, $value);
+        }
+
+        return $this;
+    }
+
+    public function hasLink(): bool
+    {
+        return null !== $this->link;
     }
 
     /**
@@ -380,9 +303,9 @@ class Item
         return
             property_exists($this, $property)
             ||
-            $this->hasAttribute($property)
+            $this->attributes->has($property)
             ||
-            $this->hasData($property);
+            $this->data->has($property);
     }
 
     /**
@@ -395,12 +318,7 @@ class Item
         }
     }
 
-    /**
-     * Make the item active
-     *
-     * @return Item
-     */
-    protected function setToActive()
+    protected function setToActive(): self
     {
         $this->attributes['class'] = Utils::addHtmlClass(
             Arr::get($this->attributes, 'class'),
@@ -413,25 +331,36 @@ class Item
 
     /**
      * Returns whether the current URL matches this link's URL
-     *
-     * @return bool
      */
-    protected function currentUrlMatches()
+    protected function currentUrlMatches(): bool
     {
         if ($this->url() == Request::url()) { // If URLs are equal, always return true
             return true;
         }
 
-        if ($this->activeUrlPattern) { // If pattern was set, see if it matches
+        if (null !== $this->activeUrlPattern) { // If pattern was set, see if it matches
             $pattern = ltrim(preg_replace('/\*/', '(.*)?', $this->activeUrlPattern), '/');
 
-            return preg_match("@^{$pattern}\z@", Request::path());
+            return (bool) preg_match("@^{$pattern}\z@", Request::path());
         }
 
-        return false; // No match
+        return false;
     }
 
-    private function resolveParent($parent)
+    /**
+     * Cascade data to children
+     *
+     * @deprecated
+     */
+    protected function cascadeData(...$args): void
+    {
+        if ($this->hasChildren()) {
+            $this->children()->data(...$args);
+        }
+    }
+
+
+    private function resolveParent(null|string|Item $parent): ?Item
     {
         if (!$parent || empty($parent)) {
             return null;

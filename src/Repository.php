@@ -14,81 +14,49 @@ declare(strict_types=1);
 
 namespace Konekt\Menu;
 
+use Illuminate\Support\Collection;
+use Konekt\Extend\TypedDictionary;
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;
 
-/**
- * Menu Repository class contains several menu instances
- */
 class Repository
 {
-    /**
-     * Menu collection
-     *
-     * @var \Illuminate\Support\Collection
-     */
-    protected $menus;
+    protected TypedDictionary $menus;
 
-    /**
-     * Initializing the menu builder
-     */
     public function __construct()
     {
-        $this->menus = collect();
+        $this->menus = TypedDictionary::ofClass(Menu::class);
     }
 
     /**
      * Create a new menu instance
      *
-     * @param string    $name       The name of the menu
-     * @param array     $options    Set of options
-     *
      * @see processOptions() method
      *
-     * @return Menu
      * @throws MenuAlreadyExistsException
      */
-    public function create($name, $options = [])
+    public function create(string $name, array $options = []): Menu
     {
         if ($this->menus->has($name)) {
             throw new MenuAlreadyExistsException("Can not create menu named `$name` because it already exists");
         }
 
-        $this->menus->put($name, $instance = MenuFactory::create($name, $options));
+        $this->menus->set($name, $instance = MenuFactory::create($name, $options));
 
         return $instance;
     }
 
-    /**
-     * Return Menu instance from the collection by name
-     *
-     * @param  string $name
-     *
-     * @return Menu|null
-     */
-    public function get($name)
+    public function get(string $name): ?Menu
     {
         return $this->menus->get($name);
     }
 
-    /**
-     * Returns whether repo has menu with name
-     *
-     * @param  string $name
-     *
-     * @return Menu|null
-     */
-    public function has($name)
+    public function has(string $name): bool
     {
         return $this->menus->has($name);
     }
 
-    /**
-     * Returns all the menus (as collection)
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function all()
+    public function all(): Collection
     {
-        return $this->menus;
+        return collect($this->menus->all());
     }
 }

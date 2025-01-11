@@ -105,13 +105,13 @@ class MenuTest extends TestCase
         $this->menu->attr('class', 'nav nav-inverse');
         $this->assertStringContainsString('<ul class="nav nav-inverse"', $this->menu->render('ul'));
 
-        $this->menu->home->attr(['disabled']);
+        $this->menu->getItem('home')->attributes->set('disabled');
         $this->assertStringContainsString('<li class="active" disabled', $this->menu->render('ul'));
 
-        $this->menu->about->attr(['disabled', 'readonly' => 1]);
+        $this->menu->getItem('about')->attributes->push(['disabled', 'readonly' => 1]);
         $this->assertStringContainsString('<li disabled readonly="1"', $this->menu->render('ul'));
 
-        $this->menu->contact->link->attr('target', '_blank');
+        $this->menu->getItem('contact')->link->attributes->set('target', '_blank');
         $this->assertStringContainsString(
             sprintf(
                 '<a href="%s/contact" target="_blank"',

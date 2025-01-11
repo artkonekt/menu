@@ -15,7 +15,7 @@ namespace Konekt\Menu\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\AliasLoader;
-use Konekt\Menu\Facades\Menu;
+use Konekt\Menu\Facades\Menus;
 use Konekt\Menu\MenuServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -41,7 +41,7 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        AliasLoader::getInstance()->alias('Menu', Menu::class);
+        AliasLoader::getInstance()->alias('Menu', Menus::class);
     }
 
     /**
