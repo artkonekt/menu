@@ -34,7 +34,7 @@ class ItemCollection implements Countable, IteratorAggregate
         if (!empty($items)) {
             $this->items->push(
                 array_combine(
-                    array_map(fn($item) => $item->name, $items),
+                    array_map(fn ($item) => $item->name, $items),
                     $items,
                 )
             );
@@ -107,7 +107,7 @@ class ItemCollection implements Countable, IteratorAggregate
 
     public function isEmpty(): bool
     {
-        return $this->items->count() === 0;
+        return 0 === $this->items->count();
     }
 
     public function isNotEmpty(): bool

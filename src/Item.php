@@ -359,7 +359,6 @@ class Item
         }
     }
 
-
     private function resolveParent(null|string|Item $parent): ?Item
     {
         if (!$parent || empty($parent)) {

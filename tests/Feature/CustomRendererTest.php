@@ -17,7 +17,6 @@ use Illuminate\Support\Str;
 use Konekt\Menu\Facades\Menus;
 use Konekt\Menu\Tests\Feature\Renderer\BulmaMenuRenderer;
 use Konekt\Menu\Tests\TestCase;
-use Menu;
 
 class CustomRendererTest extends TestCase
 {
