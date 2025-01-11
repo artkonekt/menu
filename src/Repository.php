@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Menu Repository class.
  *
@@ -12,7 +14,6 @@
 namespace Konekt\Menu;
 
 use Konekt\Menu\Exceptions\MenuAlreadyExistsException;
-use View;
 
 /**
  * Menu Repository class contains several menu instances

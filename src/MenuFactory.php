@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the MenuFactory class.
  *
@@ -31,7 +33,7 @@ class MenuFactory
                     View::share($menu->name, $menu);
                 }
             } else {
-                View::share((string)$options['share'], $menu);
+                View::share((string) $options['share'], $menu);
             }
         }
 

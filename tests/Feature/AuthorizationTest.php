@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the AuthorizationTest class.
  *
@@ -28,6 +30,18 @@ class AuthorizationTest extends TestCase
 
     /** @var User */
     protected $anotherUser;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setUpDatabase();
+        $this->setUpAuth();
+
+        $this->menu = MenuFactory::create('nav', []);
+
+        $this->createUsers();
+    }
 
     /**
      * @test
@@ -80,7 +94,7 @@ class AuthorizationTest extends TestCase
 
         $this->assertTrue($item->isAllowed());
 
-        $this->be(($this->anotherUser));
+        $this->be($this->anotherUser);
 
         $this->assertFalse($item->isAllowed());
     }
@@ -138,29 +152,17 @@ class AuthorizationTest extends TestCase
         $this->assertFalse($item->isAllowed($this->user));
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->setUpDatabase();
-        $this->setUpAuth();
-
-        $this->menu = MenuFactory::create('nav', []);
-
-        $this->createUsers();
-    }
-
     protected function createUsers()
     {
         $this->user = User::create([
-            'email'    => 'giovanni@gatto.it',
-            'name'     => 'Giovanni Gatto',
+            'email' => 'giovanni@gatto.it',
+            'name' => 'Giovanni Gatto',
             'password' => bcrypt('Putin')
         ])->fresh();
 
         $this->anotherUser = User::create([
-            'email'    => 'frederico@latte.it',
-            'name'     => 'Frederico Latte',
+            'email' => 'frederico@latte.it',
+            'name' => 'Frederico Latte',
             'password' => bcrypt('Erdogan')
         ]);
     }
@@ -176,9 +178,9 @@ class AuthorizationTest extends TestCase
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 }

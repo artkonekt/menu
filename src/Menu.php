@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Menu class.
  *
@@ -48,9 +50,19 @@ class Menu
      */
     public function __construct($name, MenuConfiguration $config)
     {
-        $this->name   = $name;
+        $this->name = $name;
         $this->config = $config;
-        $this->items  = new ItemCollection();
+        $this->items = new ItemCollection();
+    }
+
+    /**
+     * Returns menu item by name
+     *
+     * @return \Konekt\Menu\Item
+     */
+    public function __get($prop)
+    {
+        return $this->items->get($prop);
     }
 
     /**
@@ -65,7 +77,7 @@ class Menu
     public function addItem($name, $title, $options = [])
     {
         $options = is_string($options) ? ['url' => $options] : $options;
-        $item    = new Item($this, $name, $title, $options);
+        $item = new Item($this, $name, $title, $options);
         $this->items->addItem($item);
 
         return $item;
@@ -106,15 +118,5 @@ class Menu
     public function clear(): void
     {
         $this->items = new ItemCollection();
-    }
-
-    /**
-     * Returns menu item by name
-     *
-     * @return \Konekt\Menu\Item
-     */
-    public function __get($prop)
-    {
-        return $this->items->get($prop);
     }
 }

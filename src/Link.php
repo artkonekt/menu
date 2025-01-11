@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Menu Link class.
  *
@@ -18,6 +20,9 @@ class Link
 {
     use HasAttributes;
 
+    /** @var bool   Flag for active state */
+    public $isActive = false;
+
     /** @var array  Path Information */
     protected $path = [];
 
@@ -27,9 +32,6 @@ class Link
     /** @var string Explicit href for the link */
     protected $href;
 
-    /** @var bool   Flag for active state */
-    public $isActive = false;
-
     /**
      * Class constructor
      *
@@ -38,8 +40,25 @@ class Link
      */
     public function __construct($path = [], $activeClass = 'active')
     {
-        $this->path        = $path;
+        $this->path = $path;
         $this->activeClass = $activeClass;
+    }
+
+    /**
+     * Check for a method of the same name if the attribute doesn't exist.
+     *
+     * @param  string $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->attr($property);
+    }
+
+    public function __set($property, $value)
+    {
+        return $this->attr($property, $value);
     }
 
     /**
@@ -49,7 +68,7 @@ class Link
      */
     public function activate()
     {
-        $this->isActive            = true;
+        $this->isActive = true;
         $this->attributes['class'] = Utils::addHtmlClass(
             Arr::get($this->attributes, 'class', ''),
             $this->activeClass
@@ -93,23 +112,6 @@ class Link
     }
 
     /**
-     * Check for a method of the same name if the attribute doesn't exist.
-     *
-     * @param  string $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->attr($property);
-    }
-
-    public function __set($property, $value)
-    {
-        return $this->attr($property, $value);
-    }
-
-    /**
      * Get the action for "url" option.
      *
      * @return string
@@ -118,7 +120,7 @@ class Link
     {
         $url = $this->path['url'];
 
-        $uri    = is_array($url) ? $url[0] : $url;
+        $uri = is_array($url) ? $url[0] : $url;
         $params = is_array($url) ? array_slice($url, 1) : null;
 
         if (Utils::isAbsoluteUrl($uri)) {

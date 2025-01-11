@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Menu Item class.
  *
@@ -63,19 +65,39 @@ class Item
      */
     public function __construct(Menu $menu, $name, $title, $options)
     {
-        $this->menu       = $menu;
-        $this->name       = $name;
-        $this->title      = $title;
+        $this->menu = $menu;
+        $this->name = $name;
+        $this->title = $title;
         $this->attributes = Arr::except($options, $this->reserved);
-        $this->parent     = $this->resolveParent(Arr::get($options, 'parent', null));
-        $this->renderer   = Arr::get($options, 'renderer', null);
+        $this->parent = $this->resolveParent(Arr::get($options, 'parent', null));
+        $this->renderer = Arr::get($options, 'renderer', null);
 
-        $path       = Arr::only($options, array('url', 'route', 'action'));
+        $path = Arr::only($options, ['url', 'route', 'action']);
         if (!empty($path)) {
             $this->link = new Link($path, $this->menu->config->activeClass);
         }
 
         $this->checkActivation();
+    }
+
+    /**
+     * Search in meta data if a property doesn't exist otherwise return the property
+     *
+     * @param  string
+     *
+     * @return string
+     */
+    public function __get($prop)
+    {
+        if (property_exists($this, $prop)) {
+            return $this->$prop;
+        }
+
+        if ($this->children()->has($prop)) {
+            return $this->children()->get($prop);
+        }
+
+        return $this->data($prop);
     }
 
     /**
@@ -89,7 +111,7 @@ class Item
      */
     public function addSubItem($name, $title, $options = [])
     {
-        $options           = is_array($options) ? $options : ['url' => $options];
+        $options = is_array($options) ? $options : ['url' => $options];
         $options['parent'] = $this;
 
         return $this->menu->addItem($name, $title, $options);
@@ -239,7 +261,7 @@ class Item
      */
     public function hasParent()
     {
-        return (bool)$this->parent;
+        return (bool) $this->parent;
     }
 
     /**
@@ -247,7 +269,7 @@ class Item
      */
     public function activate()
     {
-        if ($this->menu->config->activeElement == 'item') {
+        if ('item' == $this->menu->config->activeElement) {
             $this->setToActive();
         } else {
             if ($this->link) {
@@ -330,7 +352,7 @@ class Item
      */
     public function hasLink()
     {
-        return (bool)$this->link;
+        return (bool) $this->link;
     }
 
     /**
@@ -360,26 +382,6 @@ class Item
             $this->hasAttribute($property)
             ||
             $this->hasData($property);
-    }
-
-    /**
-     * Search in meta data if a property doesn't exist otherwise return the property
-     *
-     * @param  string
-     *
-     * @return string
-     */
-    public function __get($prop)
-    {
-        if (property_exists($this, $prop)) {
-            return $this->$prop;
-        }
-
-        if ($this->children()->has($prop)) {
-            return $this->children()->get($prop);
-        }
-
-        return $this->data($prop);
     }
 
     /**
@@ -441,7 +443,7 @@ class Item
         throw new MenuItemNotFoundException(
             sprintf(
                 'Item named `%s` could not be found in the `%s` menu',
-                (string)$parent,
+                (string) $parent,
                 $this->menu->name
             )
         );

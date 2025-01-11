@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the MenuConfigurationTest class.
  *
@@ -43,11 +45,11 @@ class MenuConfigurationTest extends TestCase
     public function testValuesCanBeSetProperlyFromOptionsArray()
     {
         $config = new MenuConfiguration([
-            'auto_activate'    => false,
+            'auto_activate' => false,
             'activate_parents' => false,
-            'cascade_data'     => false,
-            'active_element'   => 'link',
-            'active_class'     => 'is-active'
+            'cascade_data' => false,
+            'active_element' => 'link',
+            'active_class' => 'is-active'
         ]);
 
         $this->assertFalse($config->autoActivate);

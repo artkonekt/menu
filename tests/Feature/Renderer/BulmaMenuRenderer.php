@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the BulmaMenuRenderer.php class.
  *
@@ -29,8 +31,8 @@ class BulmaMenuRenderer implements MenuRenderer
 
     protected function renderLevel(ItemCollection $items, $level)
     {
-        $tabs  = str_repeat("\t", $level);
-        $class = $level == 1 ? ' class="menu-list"' : '';
+        $tabs = str_repeat("\t", $level);
+        $class = 1 == $level ? ' class="menu-list"' : '';
 
         $result = "$tabs<ul$class>\n";
         foreach ($items as $item) {

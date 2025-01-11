@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the Utils class.
  *
@@ -63,8 +65,8 @@ class Utils
 
         foreach ($attributes as $key => $value) {
             $element = is_numeric($key) ?
-                (string)$value :
-                (is_null($value) ? (string)$key : $key . '="' . e($value) . '"');
+                (string) $value :
+                (is_null($value) ? (string) $key : $key . '="' . e($value) . '"');
             if (!empty($element)) {
                 $attrs[] = $element;
             }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the ItemCollectionTest class.
  *
@@ -20,6 +22,21 @@ class ItemCollectionTest extends TestCase
 {
     /** @var  Menu */
     protected $menu;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->menu = MenuFactory::create('sidebar', ['auto_activate' => false]);
+        $this->menu->addItem('home', 'Home', ['url' => '/', 'category' => 'internal']);
+
+        $this->menu->addItem('about', 'About', ['url' => '/about', 'category' => 'internal']);
+        $this->menu->about->addSubItem('about-us', 'About Us', ['url' => '/about/us', 'category' => 'internal']);
+        $this->menu->about->addSubItem('about-our-product', 'About Our Product', ['url' => '/about/our-product', 'category' => 'internal']);
+
+        $this->menu->addItem('contact', 'Contact', ['url' => '/contact', 'category' => 'internal']);
+        $this->menu->addItem('google', 'Google', 'https://google.com')->data('engine', 'google');
+    }
 
     public function testMagicWhereMethod()
     {
@@ -99,20 +116,5 @@ class ItemCollectionTest extends TestCase
         $this->assertFalse($this->menu->items->has('about-our-product'));
 
         $this->assertEquals($originalCount - 4, $this->menu->items->count());
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->menu = MenuFactory::create('sidebar', ['auto_activate' => false]);
-        $this->menu->addItem('home', 'Home', ['url' => '/', 'category' => 'internal']);
-
-        $this->menu->addItem('about', 'About', ['url' => '/about', 'category' => 'internal']);
-        $this->menu->about->addSubItem('about-us', 'About Us', ['url' => '/about/us', 'category' => 'internal']);
-        $this->menu->about->addSubItem('about-our-product', 'About Our Product', ['url' => '/about/our-product', 'category' => 'internal']);
-
-        $this->menu->addItem('contact', 'Contact', ['url' => '/contact', 'category' => 'internal']);
-        $this->menu->addItem('google', 'Google', 'https://google.com')->data('engine', 'google');
     }
 }

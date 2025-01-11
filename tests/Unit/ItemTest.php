@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Contains the ItemTest class.
  *
@@ -18,6 +20,17 @@ use Konekt\Menu\Tests\TestCase;
 
 class ItemTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \Route::get('/articles/{slug}', function ($slug) {
+            return 'Hello, ' . $slug;
+        });
+
+        \Route::get('/about', function () {
+            return 'About Us';
+        });
+    }
     public function testItemParentCanBeResolvedProperly()
     {
         $menu = \Menu::create('uberGigaMenu');
@@ -38,7 +51,7 @@ class ItemTest extends TestCase
             $menu->about,
             $menu->addItem('our-goals', 'Our Goals', [
                 'parent' => 'about',
-                'url'    => '/our-goals'
+                'url' => '/our-goals'
             ])->parent
         );
     }
@@ -135,17 +148,5 @@ class ItemTest extends TestCase
         $result->shouldReceive('setUserResolver');
 
         return $result;
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        \Route::get('/articles/{slug}', function ($slug) {
-            return 'Hello, ' . $slug;
-        });
-
-        \Route::get('/about', function () {
-            return 'About Us';
-        });
     }
 }
