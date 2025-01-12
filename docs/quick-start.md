@@ -1,15 +1,35 @@
-# Overview
+# Quick Start
 
 Navigation menus are essential parts of applications. This library offers PHP developers tools to create, organize,
 and manage menus using PHP classes.
 
-```php
-use Konekt\Menu\Facades\Menus
+An application can have one or more menus, each identified by name like `main`, `sidebar`, or `account-menu`, etc.
 
-$sidebar = Menus::create('sidebar');
-$sidebar->addItem('home', 'Home',  '/');
-$sidebar->addItem('about', 'About', '/about');
+## Define Menus
+
+Menus are typically defined in the `AppServiceProvider::boot()` method, so any request hits your application, the menu
+objects will be available.
+
+**Example:**
+
+```php
+namespace App\Providers
+
+use Illuminate\Support\ServiceProvider;
+use Konekt\Menu\Facades\Menus;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $sidebar = Menus::create('sidebar');
+        $sidebar->addItem('home', 'Home',  '/');
+        $sidebar->addItem('about', 'About', '/about');
+    }
+}
 ```
+
+### Rendering
 
 This library focuses on the backend, PHP part of menu building, including the HTML generation.
 The frontend framework, and the menu styling is up to the application, however there are several out-of-the box

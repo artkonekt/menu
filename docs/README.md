@@ -2,8 +2,8 @@
 
 A Menu handling component for Laravel applications.
 
-## Start Here:
+## Start Here
 
+- [Quick Start](quick-start.md)
 - [Installation](installation.md)
-- [Upgrade](upgrade.md)
-- [Usage](customer.md)
+- [Usage](menus.md)
