@@ -45,3 +45,20 @@ Besides these, you can also simply use the menus in Blade templates and render t
 @endforeach
 </div>
 ```
+
+```twig
+<div class="menu">
+    {% for item in menu.items %}
+        {% if item.isAllowed() %}
+            <div class="menu-item">
+                {% if item.hasLink %}
+                    <a href="{{ item.url()|raw }}">{{ item.title }}</a>
+                {% else %}
+                    {{ item.title }}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+```
