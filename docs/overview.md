@@ -30,7 +30,7 @@ Menu::get('sidebar')->render('ul');
 
 Besides these, you can also simply use the menus in Blade templates and render them using foreach loops:
 
-```blade
+```bladehtml
 <div class="menu">
 @foreach($menu->items as $item)
     @if($item->isAllowed())
