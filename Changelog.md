@@ -8,6 +8,10 @@
 - Dropped PHP 8.1 Support
 - Dropped Laravel 10 Support
 - Added Laravel 12 Support
+- Added the `menu('name')` helper for views which is equivalent to `\Menu:get('name')`
+- Added the `\Menus` alias to the facade
+- Added the `withAttribute` and `withAttributes` methods to the `Item` and `Link` classes
+- BC: Renamed the Facade class from `Menu` to `Menus` (the `\Menu` alias is still available!)
 
 ---
 

@@ -42,6 +42,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getEnvironmentSetUp($app)
     {
         AliasLoader::getInstance()->alias('Menu', Menus::class);
+        AliasLoader::getInstance()->alias('Menus', Menus::class);
     }
 
     /**

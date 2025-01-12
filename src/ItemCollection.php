@@ -217,6 +217,11 @@ class ItemCollection implements Countable, IteratorAggregate
         return $this->filter(fn (Item $item) => $item->hasParent());
     }
 
+    public function thatAreAllowed(): static
+    {
+        return $this->filter(fn (Item $item) => $item->isAllowed());
+    }
+
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->items->toArray());

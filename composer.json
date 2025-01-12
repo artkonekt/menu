@@ -30,7 +30,10 @@
     "autoload": {
         "psr-4": {
             "Konekt\\Menu\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "require-dev": {
         "ext-sqlite3": "*",
@@ -52,10 +55,11 @@
         },
         "laravel": {
             "providers": [
-                "Konekt\\Menu\\MenuServiceProvider"
+                "MenuServiceProvider"
             ],
             "aliases": {
-                "Menu": "Menus"
+                "Menu": "Konekt\\Menu\\Facades\\Menus",
+                "Menus": "Konekt\\Menu\\Facades\\Menus"
             }
         }
     }

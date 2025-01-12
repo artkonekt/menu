@@ -50,6 +50,20 @@ trait HasAttributes
         return $this->attributes->has($name);
     }
 
+    public function withAttribute(string $name, ?string $value = null): static
+    {
+        $this->attributes->set($name, $value);
+
+        return $this;
+    }
+
+    public function withAttributes(array $attributes): static
+    {
+        $this->attributes->push($attributes);
+
+        return $this;
+    }
+
     /**
      * @deprecated use the $attributes->toHtml() method instead
      */

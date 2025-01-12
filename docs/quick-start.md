@@ -22,9 +22,9 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $sidebar = Menus::create('sidebar');
-        $sidebar->addItem('home', 'Home',  '/');
-        $sidebar->addItem('about', 'About', '/about');
+        $topmenu = Menus::create('topmenu');
+        $topmenu->addItem('home', 'Home',  '/');
+        $topmenu->addItem('about', 'About', '/about');
     }
 }
 ```
