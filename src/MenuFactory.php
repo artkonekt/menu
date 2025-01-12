@@ -42,7 +42,7 @@ class MenuFactory
             return false;
         }
 
-        $result = is_string($setting) ? $setting: $nameOfTheMenu;
+        $result = is_string($setting) ? $setting : $nameOfTheMenu;
 
         if (!self::isValidVariableName($result)) {
             throw new InvalidMenuConfigurationException("It is not possible to share the `$nameOfTheMenu` as `$result` in blade views because `$result` is not a valid PHP variable name.");
