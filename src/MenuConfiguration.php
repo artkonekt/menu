@@ -36,6 +36,8 @@ class MenuConfiguration
     /** Whether to automatically copy metadata to child elements. False by default */
     public bool $cascadeData = false;
 
+    public string|false $sharedAs = false;
+
     public function __construct(array $options = [])
     {
         $this->parseOptions($options);
@@ -48,6 +50,7 @@ class MenuConfiguration
         $this->activeClass = Arr::get($options, 'active_class', 'active');
         $this->activeElement = strtolower(Arr::get($options, 'active_element', 'item'));
         $this->cascadeData = Arr::get($options, 'cascade_data', false);
+        $this->sharedAs = $options['shared_as'] ?? false;
 
         if (!in_array($this->activeElement, self::ACTIVE_ELEMENT_TYPES)) {
             throw new InvalidMenuConfigurationException(

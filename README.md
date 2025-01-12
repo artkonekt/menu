@@ -14,37 +14,6 @@ A quick and easy way to create menus in [Laravel v5.4 - v12](https://laravel.com
 > You are browsing the development branch (master = 2.0-dev) of this library.  
 > Do not rely on this branch, because it is unstable and is a subject to change!
 
-## Laravel Compatibility
-
-| Laravel | Menu Module |
-|:--------|:------------|
-| 5.4     | 1.0 - 1.3   |
-| 5.5     | 1.0 - 1.7   |
-| 5.6     | 1.1 - 1.7   |
-| 5.7     | 1.2 - 1.7   |
-| 5.8     | 1.3 - 1.7   |
-| 6.x     | 1.4 - 1.9   |
-| 7.x     | 1.5 - 1.9   |
-| 8.x     | 1.7 - 1.9   |
-| 9.x     | 1.9 - 1.10  |
-| 10.x    | 1.10+       |
-| 11.x    | 1.11+       |
-
-## PHP Compatibility
-
-| PHP | Menu Module |
-|:----|:------------|
-| 7.0 | 1.0 - 1.2   |
-| 7.1 | 1.0 - 1.5   |
-| 7.2 | 1.1 - 1.7   |
-| 7.3 | 1.3 - 1.9   |
-| 7.4 | 1.5 - 1.9   |
-| 8.0 | 1.8 - 1.10  |
-| 8.1 | 1.9+        |
-| 8.2 | 1.10+       |
-| 8.3 | 1.10+       |
-| 8.4 | 1.12+       |
-
 ## Documentation
 
 * [Installation](#installation)
@@ -76,26 +45,10 @@ A quick and easy way to create menus in [Laravel v5.4 - v12](https://laravel.com
 * [Configuration](#configuration)
 
 
-## Installation
-
-```bash
-composer require konekt/menu
-```
-
 ## Getting Started
 
 You can define the menus in a service provider's boot method, so any request hits your
 application, the menu objects will be available.
-
-### Create A Menu
-
-```php
-$sidebar = Menu::create('sidebar');
-$sidebar->addItem('Home',  '/');
-$sidebar->addItem('About', 'about');
-```
-
-You can reference it later as `Menu::get('sidebar')`.
 
 ### Access Menu In Views
 
@@ -819,22 +772,3 @@ $item->childrenAllowed(); // Returns an ItemCollection of the allowed item for t
 $item->childrenAllowed(\App\User::find(123)); // Returns the allowed items for the given user
 ```
 
-## Configuration
-
-You can adjust the behavior of the menu builder by passing settings when creating a menu:
-
-* **auto_activate** Automatically activates menu items based on the current URI (_true_ by default)
-* **activate_parents** Activates the parents of an active item (_true_ by default)
-* **active_class** CSS class name for active items (_"active"_ by default)
-* **cascade_data** If you need descendants of an item to inherit meta data from their parents, make sure this option is enabled (_true_ by default)
-* **active_element** Which HTML element to be set active _'link'_ (`<a>`) or _'item'_ (`<li>`, `<div>`, etc) (_item_ by default)
-
-```php
-Menu::create('menu', [
-    'auto_activate'    => false,
-    'activate_parents' => true,
-    'active_class'     => 'active',
-    'active_element'   => 'item',    // item|link
-    'restful'          => true,
-    'share'            => 'myMenu'   // Will be available as `$myMenu` in blade files
-]);
