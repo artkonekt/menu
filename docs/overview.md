@@ -32,7 +32,7 @@ Besides these, you can also simply use the menus in Blade templates and render t
 
 ```blade
 <div class="menu">
-{-- Iterate through the menu items --}
+{{-- Iterate through the menu items --}}
 @foreach($menu->items as $item)
     @if($item->isAllowed())
         <div class="menu-item">
