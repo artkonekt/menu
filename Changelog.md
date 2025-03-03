@@ -4,6 +4,11 @@
 
 ## 1.x
 
+## Unreleased
+###### 2025-XX-YY
+
+- Added Laravel 12 support
+
 ### 1.12.0
 ###### 2025-01-11
 
