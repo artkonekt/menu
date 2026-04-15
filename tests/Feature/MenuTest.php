@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains the MenuTest class.
  *
