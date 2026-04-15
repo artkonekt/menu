@@ -40,7 +40,7 @@ jobs:
       - name: Lock Laravel Version
         run: composer require "illuminate/support:${{ matrix.laravel }}.*" --no-update -v && composer require "illuminate/console:${{ matrix.laravel }}.*" --no-update -v
       - name: Composer Install
-        run: composer install --prefer-dist --no-progress --no-interaction --no-audit
+        run: composer install --prefer-dist --no-progress --no-interaction --no-security-blocking
       - name: Create Database
         run: mkdir -p database && touch database/database.sqlite
       - name: Run Tests
