@@ -44,4 +44,4 @@ jobs:
       - name: Create Database
         run: mkdir -p database && touch database/database.sqlite
       - name: Run Tests
-        run: php vendor/bin/phpunit --testdox
+        run: php vendor/bin/phpunit --testdox --no-audit
